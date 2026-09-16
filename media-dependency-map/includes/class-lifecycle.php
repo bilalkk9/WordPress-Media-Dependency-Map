@@ -29,6 +29,8 @@ final class Lifecycle {
 		if ( $network_wide ) {
 			wp_die( esc_html__( 'Activate Media Dependency Map separately on each site.', 'media-dependency-map' ) );
 		}
+		global $wpdb;
+		Persistence\Schema::install( $wpdb );
 		$role = get_role( 'administrator' );
 		if ( $role ) {
 			foreach ( self::CAPABILITIES as $capability ) {

@@ -13,6 +13,9 @@ if ( empty( $mdm_settings['remove_data_on_uninstall'] ) ) {
 }
 
 require_once __DIR__ . '/includes/class-lifecycle.php';
+require_once __DIR__ . '/includes/load.php';
+global $wpdb;
+\Bilal\MediaDependencyMap\Persistence\Schema::uninstall( $wpdb );
 $mdm_role = get_role( 'administrator' );
 if ( $mdm_role ) {
 	foreach ( \Bilal\MediaDependencyMap\Lifecycle::CAPABILITIES as $mdm_capability ) {

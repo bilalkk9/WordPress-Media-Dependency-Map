@@ -19,3 +19,41 @@ jobs:
       - run: composer lint
       - run: composer analyse
       - run: composer test
+  wordpress:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: wordpress
+          MYSQL_DATABASE: wordpress
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: wp-cli
+          extensions: mysqli
+          coverage: none
+      - name: Install isolated WordPress test site
+        run: |
+          mkdir -p /tmp/mdm-wordpress
+          wp core download --path=/tmp/mdm-wordpress --version=6.6.2
+          wp config create --path=/tmp/mdm-wordpress --dbname=wordpress --dbuser=root --dbpass=wordpress --dbhost=127.0.0.1:3306
+          wp core install --path=/tmp/mdm-wordpress --url=http://api-local.local --title="MDM tests" --admin_user=admin --admin_password=fixture-password --admin_email=fixture@example.test --skip-email
+          cp -R media-dependency-map /tmp/mdm-wordpress/wp-content/plugins/
+          wp plugin activate media-dependency-map --path=/tmp/mdm-wordpress
+      - name: Verify storage and core adapters
+        run: |
+          wp eval-file "$GITHUB_WORKSPACE/tests/Integration/lifecycle.php" --path=/tmp/mdm-wordpress
+          wp eval-file "$GITHUB_WORKSPACE/tests/Integration/persistence.php" --path=/tmp/mdm-wordpress
+          wp eval-file "$GITHUB_WORKSPACE/tests/Integration/core-scanners.php" --path=/tmp/mdm-wordpress
+          wp mdm status --user=admin --path=/tmp/mdm-wordpress
+          if wp mdm status --path=/tmp/mdm-wordpress; then exit 1; fi

@@ -2,8 +2,9 @@
 
 By [Bilal](https://profiles.wordpress.org/mbilalkk/).
 
-Development preview of a WordPress media dependency inspector. The initial foundation adds
-Media > Dependency Map and administrator capabilities. Scanning and replacement are pending.
+Development preview of a WordPress media dependency inspector. Version 0.2.0 adds transactional
+reference storage and read-only core inspections through WP-CLI. Whole-site scans, the dependency
+browser and replacement are pending.
 This is not a production release.
 
 ## Development
@@ -18,6 +19,7 @@ database dumps, uploaded media, credentials and third-party plugins outside this
 Use a site-specific WP-CLI `--path` for every operation. Never run bulk commands across Local sites.
 
 See [the plan](docs/plan.md), [architecture](docs/architecture.md) and the product specification.
+See [inspection commands and coverage](docs/core-inspection.md) for the current feature boundaries.
 
 ## License
 
