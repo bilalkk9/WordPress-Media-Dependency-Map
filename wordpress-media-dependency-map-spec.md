@@ -2,14 +2,14 @@
 
 ## Product Requirements, Technical Architecture, and WordPress.org Delivery Specification
 
-**Document status:** Implementation-ready specification  
-**Intended implementer:** Bilal  
-**Target distribution:** Free plugin published in the official WordPress.org Plugin Directory  
-**Working product name:** Media Dependency Map  
-**Working slug:** `media-dependency-map`  
-**Text domain:** `media-dependency-map`  
-**License:** GPL-2.0-or-later  
-**Initial release target:** 1.0.0  
+**Document status:** Implementation-ready specification
+**Intended implementer:** Bilal
+**Target distribution:** Free plugin published in the official WordPress.org Plugin Directory
+**Working product name:** Media Dependency Map
+**Working slug:** `media-dependency-map`
+**Text domain:** `media-dependency-map`
+**License:** GPL-2.0-or-later
+**Initial release target:** 1.0.0
 
 > Treat the product name and slug as provisional until exact WordPress.org, trademark, domain, and commercial-name availability have been checked. Do not claim that the plugin finds every possible reference. WordPress permits arbitrary plugins and themes to store data in undocumented formats, so the product must communicate coverage and confidence honestly.
 

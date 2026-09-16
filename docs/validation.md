@@ -13,14 +13,15 @@ Date: 2026-09-16. Author: Bilal.
   administrator-only capability assignment, no automatically scheduled scan,
   admin output and non-autoloaded settings passed.
 - Composer dependency audit: no reported advisories during dependency resolution.
+- Signed-in browser: Media submenu and coverage preview visibly present on api-local.
+- GitHub Actions run 35093666978: successful PHP 7.4, 8.2 and 8.3 quality matrix.
 
 Installed integration baseline: Elementor 4.2.4, Pro Elements 3.35.0,
 WPBakery 9.0.1 and Bricks theme 2.3.6. ACF and WooCommerce were absent.
 
 ## Outstanding
 
-- Browser inspection requires an authenticated admin session.
-- Remote CI execution and minimum-version runtime tests are not yet evidenced.
+- WordPress minimum-version integration testing is not yet evidenced.
 - Product name and slug clearance remains pending; no availability guarantee.
 - Plugin Check and final release packaging gates remain pending.
 - Indexing, adapters, replacement and rollback are not implemented in this preview.
