@@ -21,7 +21,7 @@ WPBakery 9.0.1 and Bricks theme 2.3.6. ACF and WooCommerce were absent.
 
 ## Outstanding
 
-- WordPress minimum-version integration testing is not yet evidenced.
+- Broader WordPress, multisite and integration-version coverage remains pending.
 - Product name and slug clearance remains pending; no availability guarantee.
 - Plugin Check and final release packaging gates remain pending.
 - Whole-site indexing, third-party adapters, replacement and rollback are not implemented in this preview.
@@ -45,5 +45,6 @@ the site's PHP configuration was not changed. Media processing tests must revisi
 - Browser: updated core coverage and limitations visible on the signed-in admin screen.
 - Exact 0.2.0 ZIP installed over the previous preview on api-local; scanner fixtures passed afterward.
 
-An isolated WordPress 6.6.2 integration job is included in CI. Its result must be checked
-after pushing; local evidence uses WordPress 7.1 with the previously recorded integrations.
+GitHub Actions run 35095770839 passed the PHP 7.4/8.2/8.3 quality matrix and isolated
+WordPress 6.6.2 lifecycle, persistence and scanner integration tests. Local evidence uses
+WordPress 7.1 with the previously recorded integrations.
