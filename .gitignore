@@ -1,0 +1,9 @@
+/vendor/
+/.tools/
+/build/
+/.phpunit.cache/
+/.phpunit.result.cache
+*.log
+.env
+.env.*
+!.env.example

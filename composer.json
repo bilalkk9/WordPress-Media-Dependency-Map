@@ -1,0 +1,35 @@
+{
+  "name": "bilal/media-dependency-map",
+  "description": "Local WordPress media dependency inspection.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Bilal",
+      "homepage": "https://profiles.wordpress.org/mbilalkk/"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.6",
+    "wp-coding-standards/wpcs": "^3.0",
+    "phpstan/phpstan": "^2.0",
+    "php-stubs/wordpress-stubs": "^6.0 || ^7.0",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    },
+    "platform": {
+      "php": "7.4.33"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "lint": "phpcs",
+    "analyse": "phpstan analyse --memory-limit=512M"
+  }
+}
