@@ -62,6 +62,8 @@ jobs:
           if wp mdm status --path=/tmp/mdm-wordpress; then exit 1; fi
       - name: Verify Elementor integration with public plugin
         run: |
+          wp core update --version=6.8 --path=/tmp/mdm-wordpress
+          wp core update-db --path=/tmp/mdm-wordpress
           wp plugin install elementor --version=4.2.4 --activate --path=/tmp/mdm-wordpress
           wp eval-file "$GITHUB_WORKSPACE/tests/Integration/elementor.php" --path=/tmp/mdm-wordpress
           wp mdm scan --all --user=admin --path=/tmp/mdm-wordpress
