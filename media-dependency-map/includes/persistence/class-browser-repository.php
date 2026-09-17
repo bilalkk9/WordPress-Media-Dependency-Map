@@ -43,6 +43,11 @@ final class Browser_Repository {
 		if ( \Bilal\MediaDependencyMap\Adapters\Elementor::available() ) {
 			$adapters[] = 'elementor';
 		}
+		if ( \Bilal\MediaDependencyMap\Adapters\Acf::available() ) {
+			foreach ( array( 'post', 'term', 'user', 'comment', 'site' ) as $source ) {
+				$adapters[] = 'acf-' . $source;
+			}
+		}
 		$matching = $run && ( $run->state['adapters'] ?? array() ) === $adapters;
 		return array(
 			'generation'   => (int) $control->active_generation,
@@ -126,7 +131,9 @@ final class Browser_Repository {
 		if ( in_array( $confidence, array( 'exact', 'strong', 'heuristic', 'unresolved' ), true ) ) {
 			$where       .= ' AND confidence = %s';
 			$parameters[] = $confidence; }
-		if ( in_array( $adapter, array( 'core', 'site-identity', 'elementor' ), true ) ) {
+		if ( 'acf' === $adapter ) {
+			$where .= " AND adapter_id IN ('acf-post','acf-term','acf-user','acf-comment','acf-site')";
+		} elseif ( in_array( $adapter, array( 'core', 'site-identity', 'elementor' ), true ) ) {
 			$where       .= ' AND adapter_id = %s';
 			$parameters[] = $adapter; }
 		$parameters[] = max( 0, min( 1000000, $offset ) );

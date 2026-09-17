@@ -115,6 +115,11 @@ final class Scan_Repository {
 			'adapters'    => $adapters,
 			'cursor'      => 0,
 			'max_id'      => (int) $max,
+			'max_ids'     => array(
+				'term'    => $this->ceiling( 'term' ),
+				'user'    => $this->ceiling( 'user' ),
+				'comment' => $this->ceiling( 'comment' ),
+			),
 			'sequence'    => (int) $control->revision,
 			'processed'   => 0,
 			'error_count' => 0,
@@ -236,11 +241,45 @@ final class Scan_Repository {
 	public function page( $source, $cursor, $max ) {
 		if ( 'site' === $source ) {
 			return 0 === $cursor ? array( get_current_blog_id() ) : array(); }
+		$object = $this->object_table( $source );
+		if ( $object ) {
+			$ids = $this->db->get_col( $this->db->prepare( 'SELECT %i FROM %i WHERE %i > %d AND %i <= %d ORDER BY %i ASC LIMIT 20', $object[1], $object[0], $object[1], $cursor, $object[1], $max, $object[1] ) );
+			$this->check( $ids );
+			return array_map( 'intval', $ids );
+		}
 		$condition = 'attachment' === $source ? "post_type = 'attachment'" : "post_type NOT IN ('revision','attachment') AND post_status <> 'auto-draft'";
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Condition comes exclusively from the two static strings above.
 		$ids = $this->db->get_col( $this->db->prepare( "SELECT ID FROM %i WHERE ID > %d AND ID <= %d AND $condition ORDER BY ID ASC LIMIT 20", $this->db->posts, $cursor, $max ) );
 		$this->check( $ids );
 		return array_map( 'intval', $ids );
+	}
+
+	/**
+	 * Resolve a closed allowlist of extra WordPress consumer tables.
+	 *
+	 * @param string $source Consumer source.
+	 * @return array
+	 */
+	private function object_table( $source ) {
+		$tables = array(
+			'term'    => array( $this->db->terms, 'term_id' ),
+			'user'    => array( $this->db->users, 'ID' ),
+			'comment' => array( $this->db->comments, 'comment_ID' ),
+		);
+		return $tables[ $source ] ?? array();
+	}
+
+	/**
+	 * Snapshot an independent cursor ceiling for each object type.
+	 *
+	 * @param string $source Consumer source.
+	 * @return int
+	 */
+	private function ceiling( $source ) {
+		$object = $this->object_table( $source );
+		$max    = $this->db->get_var( $this->db->prepare( 'SELECT COALESCE(MAX(%i),0) FROM %i', $object[1], $object[0] ) );
+		$this->check( $max );
+		return (int) $max;
 	}
 
 	/**
@@ -289,7 +328,7 @@ final class Scan_Repository {
 	 * @param int    $id Consumer ID.
 	 */
 	public function enqueue( $source, $id ) {
-		if ( ! in_array( $source, array( 'post', 'site', 'full' ), true ) ) {
+		if ( ! in_array( $source, array( 'post', 'site', 'term', 'user', 'comment', 'full' ), true ) ) {
 			return; }
 		$this->check( $this->db->query( $this->db->prepare( 'UPDATE %i SET revision = LAST_INSERT_ID(revision + 1) WHERE id = 1', $this->table( 'control' ) ) ) );
 		$sequence = (int) $this->db->get_var( 'SELECT LAST_INSERT_ID()' );

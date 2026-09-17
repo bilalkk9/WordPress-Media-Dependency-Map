@@ -187,7 +187,7 @@ final class Engine {
 		$adapter_id = $is_paths ? 'paths' : $state['adapters'][ $state['adapter'] ];
 		$descriptor = $is_paths ? null : $adapters[ $adapter_id ];
 		$source     = $is_paths ? 'attachment' : $descriptor['source'];
-		$ids        = $this->store->page( $source, $state['cursor'], $state['max_id'] );
+		$ids        = $this->store->page( $source, $state['cursor'], $state['max_ids'][ $source ] ?? $state['max_id'] );
 		if ( ! $ids ) {
 			$state['cursor'] = 0;
 			if ( $is_paths ) {
@@ -254,6 +254,7 @@ final class Engine {
 					continue; }
 				$id      = (int) $item->consumer_id;
 				$deleted = 'post' === $item->source && ! get_post( $id );
+				$deleted = $deleted || ( 'term' === $item->source && ! get_term( $id ) ) || ( 'user' === $item->source && ! get_userdata( $id ) ) || ( 'comment' === $item->source && ! get_comment( $id ) );
 				if ( ! $deleted && 'post' === $item->source && ! current_user_can( 'edit_post', $id ) ) {
 					throw new \RuntimeException( 'Consumer is not authorized.' ); }
 				$snapshots[ $adapter_id ] = $deleted ? array() : $descriptor['scanner']->scan( $id );

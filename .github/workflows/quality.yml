@@ -69,3 +69,11 @@ jobs:
           wp mdm scan --all --user=admin --path=/tmp/mdm-wordpress
           wp plugin deactivate elementor --path=/tmp/mdm-wordpress
           wp mdm scan --all --user=admin --path=/tmp/mdm-wordpress
+      - name: Verify ACF alone and alongside Elementor
+        run: |
+          wp plugin install 'https://connect.advancedcustomfields.com/v2/plugins/download?p=acf&s=web&t=6.8.10' --activate --path=/tmp/mdm-wordpress
+          wp eval-file "$GITHUB_WORKSPACE/tests/Integration/acf.php" --path=/tmp/mdm-wordpress
+          wp plugin activate elementor --path=/tmp/mdm-wordpress
+          wp mdm scan --all --user=admin --path=/tmp/mdm-wordpress
+          wp plugin deactivate advanced-custom-fields elementor --path=/tmp/mdm-wordpress
+          wp mdm scan --all --user=admin --path=/tmp/mdm-wordpress

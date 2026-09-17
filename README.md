@@ -2,8 +2,8 @@
 
 By [Bilal](https://profiles.wordpress.org/mbilalkk/).
 
-Development preview of a WordPress media dependency inspector. Version 0.4.0 adds read-only Elementor document scanning to the resumable index,
-dependency browser and CSV exports. ACF, WooCommerce and replacement remain pending.
+Development preview of a WordPress media dependency inspector. Version 0.5.0 adds field-aware ACF scanning across posts, terms, users, comments and
+default options, alongside Elementor and core references. WooCommerce and replacement remain pending.
 This is not a production release.
 
 ## Development
@@ -21,6 +21,8 @@ See [the plan](docs/plan.md), [architecture](docs/architecture.md) and the produ
 See [inspection commands and coverage](docs/core-inspection.md) for the current feature boundaries.
 
 See [Elementor coverage and limitations](docs/elementor.md) for the current integration milestone.
+
+See [ACF coverage and validation limits](docs/acf.md) for supported contexts and field types.
 
 ## License
 

@@ -284,7 +284,7 @@ final class Controller {
 	public function assets( $hook ) {
 		if ( 'media_page_media-dependency-map' !== $hook || ! self::allowed() ) {
 			return; }
-		wp_enqueue_script( 'mdm-admin', plugins_url( 'assets/admin.js', dirname( __DIR__, 2 ) . '/media-dependency-map.php' ), array(), '0.4.0', true );
+		wp_enqueue_script( 'mdm-admin', plugins_url( 'assets/admin.js', dirname( __DIR__, 2 ) . '/media-dependency-map.php' ), array(), '0.5.0', true );
 		wp_localize_script(
 			'mdm-admin',
 			'mdmAdmin',

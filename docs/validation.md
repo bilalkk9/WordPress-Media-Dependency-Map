@@ -92,3 +92,22 @@ WordPress 7.1 with the previously recorded integrations.
   The signed-in browser showed both Elementor ID/URL paths; filtering to Elementor
   retained exactly those two occurrences.
 - Phase 5 remains active: ACF and WooCommerce adapters are not yet implemented.
+
+
+## Version 0.5.0 ACF milestone (September 17, 2026)
+
+- Installed official ACF Free 6.8.10 on api-local for this integration milestone.
+- All seven integration suites passed with ACF and Elementor active. PHPCS and PHPStan
+  passed; PHPUnit passed the existing 23 tests and 28 assertions.
+- Real ACF APIs verified image/file/group fields across post, term, user, comment and
+  default options contexts, unformatted return values, permissions and unchanged metadata.
+- Disposable schema/value fixtures exercised gallery, repeater, flexible-content and
+  expanded grouped-clone traversal. Live ACF Pro verification remains pending.
+- Engine fixtures verified separate object ceilings, complete publication, incremental
+  user-field removal and deleted-term cleanup. Fixture users, comments, terms, options
+  and temporary plugin tables were removed afterward.
+- Installed the 0.5.0 ZIP and completed generation 15: 51 consumers processed, zero errors,
+  zero queued changes and current=true. Core, Elementor and all five ACF context adapters ran.
+- Persistent manual demos: draft page 142, category 5, field group 140, attachment 72.
+  The browser ACF filter displayed the page and category with their exact field paths.
+- WooCommerce, verified replacement/rollback and remaining release gates are pending.

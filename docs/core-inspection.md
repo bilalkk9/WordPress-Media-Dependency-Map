@@ -42,7 +42,7 @@ an occurrence count is not a distinct-page count.
 - Complex CSS escapes and data-* attribute conventions.
 - Historical upload domains, CDN aliases and offload adapters.
 - Generic filename heuristics and arbitrary options; these are deliberately not guessed.
-- ACF, WooCommerce and unsupported builder storage. Elementor registered controls are
+- WooCommerce and unsupported builder storage. ACF coverage is described in [ACF](acf.md). Elementor registered controls are
   now covered separately; see [Elementor coverage](elementor.md).
 - Additional core widget types, custom metadata and unsupported plugin storage.
 

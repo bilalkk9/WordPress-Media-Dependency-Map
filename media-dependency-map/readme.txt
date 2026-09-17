@@ -3,7 +3,7 @@ Contributors: mbilalkk
 Tags: media, attachments
 Requires at least: 6.6
 Requires PHP: 7.4
-Stable tag: 0.4.0
+Stable tag: 0.5.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,8 @@ Development preview of a local Media Library dependency inspector by Bilal.
 This development preview installs reference storage and a permission-protected screen under Media > Dependency Map.
 Resumable scans index supported core references, with incremental updates, searchable attachment details and CSV exports.
 Registered Elementor media controls are scanned when its supported API is available.
-ACF, WooCommerce, replacement and rollback are not yet available.
+ACF 6.x saved media fields are indexed across posts, terms, users, comments and default options.
+WooCommerce, replacement and rollback are not yet available.
 No site content is sent to an external service. No telemetry is included.
 
 == Installation ==
@@ -41,6 +42,11 @@ or `wp mdm scan --resume --user=admin` to continue saved work. Inspect and ident
 Deactivation stops scheduled work and keeps data. Uninstall keeps data by default.
 
 == Changelog ==
+
+= 0.5.0 =
+* Added field-aware ACF image/file and nested schema traversal.
+* Added independent term, user and comment scan cursors and incremental invalidation.
+* Added ACF source filtering, protected consumer links and integration fixtures.
 
 = 0.4.0 =
 * Added read-only Elementor document and registered control scanning.

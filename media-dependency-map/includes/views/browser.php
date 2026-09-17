@@ -65,7 +65,8 @@ return static function ( array $status, array $filters, $page_number, $attachmen
 			<li><?php esc_html_e( 'Core posts: featured images, recognized Gutenberg media attributes, synced patterns, HTML media URLs, and supported media shortcodes.', 'media-dependency-map' ); ?></li>
 			<li><?php esc_html_e( 'Site identity: icon, current theme logo, header/background images, and stored core image widgets.', 'media-dependency-map' ); ?></li>
 			<li><?php echo \Bilal\MediaDependencyMap\Adapters\Elementor::available() ? esc_html__( 'Elementor: registered media, gallery, SVG icon, URL and nested repeater controls in saved documents. Dynamic values remain unresolved; rendered output and template inclusion are not evaluated.', 'media-dependency-map' ) : esc_html__( 'Elementor: unavailable or outside the supported API range (3.20 through 4.x). Its storage is not scanned.', 'media-dependency-map' ); ?></li>
-			<li><?php esc_html_e( 'ACF, WooCommerce, Bricks and WPBakery-specific storage: not scanned in this preview.', 'media-dependency-map' ); ?></li>
+			<li><?php echo \Bilal\MediaDependencyMap\Adapters\Acf::available() ? esc_html__( 'ACF: saved image/file fields and schema-backed nested media in posts, terms, users, comments and default options. Pro field traversal requires its field APIs; custom options stores and orphaned metadata are excluded.', 'media-dependency-map' ) : esc_html__( 'ACF: unavailable or outside the supported 6.x API range. Its storage is not scanned.', 'media-dependency-map' ); ?></li>
+			<li><?php esc_html_e( 'WooCommerce, Bricks and WPBakery-specific storage: not scanned in this preview.', 'media-dependency-map' ); ?></li>
 			<li><?php esc_html_e( 'All references are read-only. No known references does not guarantee that a file is unused.', 'media-dependency-map' ); ?></li>
 		</ul>
 	</details>
@@ -96,6 +97,7 @@ return static function ( array $status, array $filters, $page_number, $attachmen
 				'core'          => __( 'Core posts', 'media-dependency-map' ),
 				'site-identity' => __( 'Site identity', 'media-dependency-map' ),
 				'elementor'     => __( 'Elementor', 'media-dependency-map' ),
+				'acf'           => __( 'ACF', 'media-dependency-map' ),
 			) as $value => $label ) :
 				?>
 											<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $filters['adapter'], $value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?></select>
@@ -110,6 +112,24 @@ return static function ( array $status, array $filters, $page_number, $attachmen
 				if ( current_user_can( 'edit_post', (int) $row->consumer_key ) ) :
 					?>
 					<br><a href="<?php echo esc_url( get_edit_post_link( (int) $row->consumer_key ) ); ?>"><?php esc_html_e( 'Edit consumer', 'media-dependency-map' ); ?></a><?php endif; ?>
+				<?php
+			elseif ( 'term' === $row->consumer_type && current_user_can( 'edit_term', (int) $row->consumer_key ) ) :
+				$term = get_term( (int) $row->consumer_key );
+				if ( $term && ! is_wp_error( $term ) ) :
+					?>
+				<a href="<?php echo esc_url( get_edit_term_link( $term->term_id, $term->taxonomy ) ); ?>"><?php echo esc_html( $term->name ); ?></a>
+					<?php
+				endif;
+			elseif ( 'user' === $row->consumer_type && current_user_can( 'edit_user', (int) $row->consumer_key ) ) :
+				$user = get_userdata( (int) $row->consumer_key );
+				if ( $user ) :
+					?>
+				<a href="<?php echo esc_url( get_edit_user_link( $user->ID ) ); ?>"><?php echo esc_html( $user->display_name ); ?></a>
+					<?php
+				endif;
+			elseif ( 'comment' === $row->consumer_type && current_user_can( 'edit_comment', (int) $row->consumer_key ) ) :
+				?>
+				<a href="<?php echo esc_url( get_edit_comment_link( (int) $row->consumer_key ) ); ?>"><?php /* translators: %s: comment identifier. */ echo esc_html( sprintf( __( 'Comment #%s', 'media-dependency-map' ), $row->consumer_key ) ); ?></a>
 				<?php
 			elseif ( 'site' === $row->consumer_type ) :
 				?>

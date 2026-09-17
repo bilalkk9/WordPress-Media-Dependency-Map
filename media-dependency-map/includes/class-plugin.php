@@ -57,6 +57,14 @@ final class Plugin {
 						'scanner' => new Adapters\Elementor( $resolver ),
 					);
 				}
+				if ( Adapters\Acf::available() ) {
+					foreach ( array( 'post', 'term', 'user', 'comment', 'site' ) as $source ) {
+						$adapters[ 'acf-' . $source ] = array(
+							'source'  => $source,
+							'scanner' => new Adapters\Acf( $resolver, $source ),
+						);
+					}
+				}
 				return $adapters;
 			}
 		);

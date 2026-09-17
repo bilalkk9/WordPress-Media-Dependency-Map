@@ -11,7 +11,7 @@ Only one phase is active at a time. Each phase must pass its checks before the n
 | 2 | Resolver and core adapters | Core fixtures passed, including synced patterns and implicit galleries |
 | 3 | Batched scans, locks, resume, incremental work and CLI | Preview validation passed |
 | 4 | Dependency browser, coverage, exports and accessibility | Preview validation passed |
-| 5 | Elementor, ACF and WooCommerce adapters | Active: Elementor preview implemented; ACF and WooCommerce pending |
+| 5 | Elementor, ACF and WooCommerce adapters | Active: Elementor and ACF previews implemented; WooCommerce and live ACF Pro verification pending |
 | 6 | Verified replacement and conflict-aware rollback | Pending |
 | 7 | Compatibility, performance and release packaging | Pending |
 
