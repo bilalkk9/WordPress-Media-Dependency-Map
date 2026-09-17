@@ -3,7 +3,7 @@ Contributors: mbilalkk
 Tags: media, attachments
 Requires at least: 6.6
 Requires PHP: 7.4
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,8 @@ Development preview of a local Media Library dependency inspector by Bilal.
 
 This development preview installs reference storage and a permission-protected screen under Media > Dependency Map.
 Resumable scans index supported core references, with incremental updates, searchable attachment details and CSV exports.
-Integration adapters, replacement and rollback are not yet available.
+Registered Elementor media controls are scanned when its supported API is available.
+ACF, WooCommerce, replacement and rollback are not yet available.
 No site content is sent to an external service. No telemetry is included.
 
 == Installation ==
@@ -26,13 +27,13 @@ No site content is sent to an external service. No telemetry is included.
 
 = Does this preview find unused media? =
 
-No. The index reports known core references and partial coverage, not a guarantee that a file is unused.
+No. The index reports known references and partial coverage, not a guarantee that a file is unused.
 
 = How do I inspect a post? =
 
 Run `wp mdm inspect 123 --user=admin` with an authorized WordPress user and a post ID.
 Run `wp mdm identity --user=admin` for site identity and stored core image widget references.
-Run `wp mdm status --user=admin` for scan status. Run `wp mdm scan --all --user=admin` to build the core index,
+Run `wp mdm status --user=admin` for scan status. Run `wp mdm scan --all --user=admin` to build the dependency index,
 or `wp mdm scan --resume --user=admin` to continue saved work. Inspect and identity remain read-only diagnostics.
 
 = What happens on deactivation or uninstall? =
@@ -40,6 +41,11 @@ or `wp mdm scan --resume --user=admin` to continue saved work. Inspect and ident
 Deactivation stops scheduled work and keeps data. Uninstall keeps data by default.
 
 == Changelog ==
+
+= 0.4.0 =
+* Added read-only Elementor document and registered control scanning.
+* Added responsive breakpoint handling, nested repeater traversal and dynamic-value reporting.
+* Added Elementor source filtering and coverage-aware index freshness.
 
 = 0.3.0 =
 * Added generation-based scans, fenced worker locks, checkpoints and incremental queues.

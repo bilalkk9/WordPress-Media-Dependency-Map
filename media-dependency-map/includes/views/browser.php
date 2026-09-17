@@ -28,7 +28,7 @@ return static function ( array $status, array $filters, $page_number, $attachmen
 			/* translators: %s: completed consumer count. */
 			printf( esc_html__( 'Scan running. %s consumers processed.', 'media-dependency-map' ), esc_html( number_format_i18n( $run->state['processed'] ?? 0 ) ) );
 		} elseif ( $status['current'] ) {
-			esc_html_e( 'Core scan complete. Unsupported integrations are not included.', 'media-dependency-map' );
+			esc_html_e( 'Supported-source scan complete. Coverage limitations still apply.', 'media-dependency-map' );
 		} else {
 			esc_html_e( 'Not fully scanned. Results may be missing or out of date.', 'media-dependency-map' );
 		}
@@ -55,7 +55,7 @@ return static function ( array $status, array $filters, $page_number, $attachmen
 			<p><button class="button button-primary" name="mode" value="start"><?php esc_html_e( 'Start full scan', 'media-dependency-map' ); ?></button>
 			<button class="button" name="mode" value="resume"><?php esc_html_e( 'Resume scan', 'media-dependency-map' ); ?></button></p>
 			<details><summary><?php esc_html_e( 'Rebuild index', 'media-dependency-map' ); ?></summary>
-			<p><label><input type="checkbox" name="confirm_rebuild" value="1"> <?php esc_html_e( 'Build a fresh core index. The last successful index remains visible until the new scan succeeds.', 'media-dependency-map' ); ?></label></p>
+			<p><label><input type="checkbox" name="confirm_rebuild" value="1"> <?php esc_html_e( 'Build a fresh dependency index. The last successful index remains visible until the new scan succeeds.', 'media-dependency-map' ); ?></label></p>
 			<button class="button" name="mode" value="rebuild"><?php esc_html_e( 'Rebuild index', 'media-dependency-map' ); ?></button></details>
 		</form>
 	<?php endif; ?>
@@ -64,8 +64,9 @@ return static function ( array $status, array $filters, $page_number, $attachmen
 		<ul>
 			<li><?php esc_html_e( 'Core posts: featured images, recognized Gutenberg media attributes, synced patterns, HTML media URLs, and supported media shortcodes.', 'media-dependency-map' ); ?></li>
 			<li><?php esc_html_e( 'Site identity: icon, current theme logo, header/background images, and stored core image widgets.', 'media-dependency-map' ); ?></li>
-			<li><?php esc_html_e( 'Elementor, ACF, WooCommerce, Bricks and WPBakery-specific storage: not scanned in this preview.', 'media-dependency-map' ); ?></li>
-			<li><?php esc_html_e( 'All references are read-only. No known core references does not guarantee that a file is unused.', 'media-dependency-map' ); ?></li>
+			<li><?php echo \Bilal\MediaDependencyMap\Adapters\Elementor::available() ? esc_html__( 'Elementor: registered media, gallery, SVG icon, URL and nested repeater controls in saved documents. Dynamic values remain unresolved; rendered output and template inclusion are not evaluated.', 'media-dependency-map' ) : esc_html__( 'Elementor: unavailable or outside the supported API range (3.20 through 4.x). Its storage is not scanned.', 'media-dependency-map' ); ?></li>
+			<li><?php esc_html_e( 'ACF, WooCommerce, Bricks and WPBakery-specific storage: not scanned in this preview.', 'media-dependency-map' ); ?></li>
+			<li><?php esc_html_e( 'All references are read-only. No known references does not guarantee that a file is unused.', 'media-dependency-map' ); ?></li>
 		</ul>
 	</details>
 	<hr>
@@ -94,6 +95,7 @@ return static function ( array $status, array $filters, $page_number, $attachmen
 				''              => __( 'All sources', 'media-dependency-map' ),
 				'core'          => __( 'Core posts', 'media-dependency-map' ),
 				'site-identity' => __( 'Site identity', 'media-dependency-map' ),
+				'elementor'     => __( 'Elementor', 'media-dependency-map' ),
 			) as $value => $label ) :
 				?>
 											<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $filters['adapter'], $value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?></select>
@@ -123,7 +125,7 @@ else :
 			<?php
 			if ( ! $rows ) :
 				?>
-				<tr><td colspan="4"><?php esc_html_e( 'No matching references in the published core index.', 'media-dependency-map' ); ?></td></tr><?php endif; ?></tbody>
+				<tr><td colspan="4"><?php esc_html_e( 'No matching references in the published dependency index.', 'media-dependency-map' ); ?></td></tr><?php endif; ?></tbody>
 		</table>
 	<?php else : ?>
 		<h2><?php esc_html_e( 'Media Library dependencies', 'media-dependency-map' ); ?></h2>
@@ -163,7 +165,7 @@ else :
 		<label for="mdm-order"><?php esc_html_e( 'Order', 'media-dependency-map' ); ?></label> <select id="mdm-order" name="order"><option value="desc" <?php selected( $filters['order'], 'desc' ); ?>><?php esc_html_e( 'Descending', 'media-dependency-map' ); ?></option><option value="asc" <?php selected( $filters['order'], 'asc' ); ?>><?php esc_html_e( 'Ascending', 'media-dependency-map' ); ?></option></select>
 		<button class="button"><?php esc_html_e( 'Apply filters', 'media-dependency-map' ); ?></button></p></form>
 		<p><a class="button" href="<?php echo esc_url( wp_nonce_url( add_query_arg( array_merge( $filters, array( 'action' => 'mdm_export' ) ), admin_url( 'admin-post.php' ) ), 'mdm_export' ) ); ?>"><?php esc_html_e( 'Export filtered CSV', 'media-dependency-map' ); ?></a></p>
-		<table class="widefat striped"><caption class="screen-reader-text"><?php esc_html_e( 'Attachments and known core references', 'media-dependency-map' ); ?></caption><thead><tr><th scope="col"><?php esc_html_e( 'Attachment', 'media-dependency-map' ); ?></th><th scope="col"><?php esc_html_e( 'Type', 'media-dependency-map' ); ?></th><th scope="col"><?php esc_html_e( 'Known usage', 'media-dependency-map' ); ?></th><th scope="col"><?php esc_html_e( 'Uploaded', 'media-dependency-map' ); ?></th></tr></thead>
+		<table class="widefat striped"><caption class="screen-reader-text"><?php esc_html_e( 'Attachments and known references', 'media-dependency-map' ); ?></caption><thead><tr><th scope="col"><?php esc_html_e( 'Attachment', 'media-dependency-map' ); ?></th><th scope="col"><?php esc_html_e( 'Type', 'media-dependency-map' ); ?></th><th scope="col"><?php esc_html_e( 'Known usage', 'media-dependency-map' ); ?></th><th scope="col"><?php esc_html_e( 'Uploaded', 'media-dependency-map' ); ?></th></tr></thead>
 		<tbody>
 		<?php
 		foreach ( $rows as $row ) :

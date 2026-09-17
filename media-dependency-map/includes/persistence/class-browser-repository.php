@@ -35,17 +35,22 @@ final class Browser_Repository {
 	 * @return array
 	 */
 	public function status() {
-		$store   = new Scan_Repository( $this->db );
-		$control = $store->control();
-		$run     = $control->last_run ? $store->run( (int) $control->last_run ) : null;
-		$queued  = $store->queue_count();
+		$store    = new Scan_Repository( $this->db );
+		$control  = $store->control();
+		$run      = $control->last_run ? $store->run( (int) $control->last_run ) : null;
+		$queued   = $store->queue_count();
+		$adapters = array( 'core', 'site-identity' );
+		if ( \Bilal\MediaDependencyMap\Adapters\Elementor::available() ) {
+			$adapters[] = 'elementor';
+		}
+		$matching = $run && ( $run->state['adapters'] ?? array() ) === $adapters;
 		return array(
 			'generation'   => (int) $control->active_generation,
 			'active_run'   => (int) $control->active_run,
 			'queued'       => $queued,
 			'run'          => $run,
 			'worker_error' => (bool) get_option( 'mdm_worker_error' ),
-			'current'      => $control->active_generation && ! $control->active_run && ! $queued && $run && 'complete' === $run->status && ! get_option( 'mdm_worker_error' ),
+			'current'      => $control->active_generation && ! $control->active_run && ! $queued && $matching && 'complete' === $run->status && ! get_option( 'mdm_worker_error' ),
 		);
 	}
 
@@ -121,7 +126,7 @@ final class Browser_Repository {
 		if ( in_array( $confidence, array( 'exact', 'strong', 'heuristic', 'unresolved' ), true ) ) {
 			$where       .= ' AND confidence = %s';
 			$parameters[] = $confidence; }
-		if ( in_array( $adapter, array( 'core', 'site-identity' ), true ) ) {
+		if ( in_array( $adapter, array( 'core', 'site-identity', 'elementor' ), true ) ) {
 			$where       .= ' AND adapter_id = %s';
 			$parameters[] = $adapter; }
 		$parameters[] = max( 0, min( 1000000, $offset ) );

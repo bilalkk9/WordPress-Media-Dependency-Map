@@ -41,7 +41,7 @@ final class Plugin {
 			new Persistence\Scan_Repository( $wpdb ),
 			static function ( $generation ) use ( $wpdb ) {
 				$resolver = new Matching\Resolver( new Persistence\Attachment_Repository( $wpdb, $generation ) );
-				return array(
+				$adapters = array(
 					'core'          => array(
 						'source'  => 'post',
 						'scanner' => new Adapters\Core( $resolver ),
@@ -51,6 +51,13 @@ final class Plugin {
 						'scanner' => new Adapters\Site_Identity( $resolver ),
 					),
 				);
+				if ( Adapters\Elementor::available() ) {
+					$adapters['elementor'] = array(
+						'source'  => 'post',
+						'scanner' => new Adapters\Elementor( $resolver ),
+					);
+				}
+				return $adapters;
 			}
 		);
 	}

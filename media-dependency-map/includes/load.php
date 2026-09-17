@@ -15,6 +15,7 @@ require_once __DIR__ . '/matching/class-resolver.php';
 require_once __DIR__ . '/adapters/interface-adapter.php';
 require_once __DIR__ . '/adapters/class-core.php';
 require_once __DIR__ . '/adapters/class-site-identity.php';
+require_once __DIR__ . '/adapters/class-elementor.php';
 require_once __DIR__ . '/persistence/class-scan-repository.php';
 require_once __DIR__ . '/index/class-engine.php';
 require_once __DIR__ . '/index/class-changes.php';

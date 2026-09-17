@@ -51,6 +51,9 @@ final class Changes {
 		add_action( 'added_option', array( $this, 'option' ) );
 		add_action( 'deleted_option', array( $this, 'option' ) );
 		add_action( 'switch_theme', array( $this, 'theme' ) );
+		add_action( 'elementor/editor/after_save', array( $this, 'post' ) );
+		add_action( 'activated_plugin', array( $this, 'integration' ) );
+		add_action( 'deactivated_plugin', array( $this, 'integration' ) );
 	}
 
 	/**
@@ -87,7 +90,7 @@ final class Changes {
 	 * @param string    $key Metadata key.
 	 */
 	public function meta( $meta_id, $post_id, $key ) {
-		if ( in_array( $key, array( '_thumbnail_id', '_wp_attached_file', '_wp_attachment_metadata' ), true ) ) {
+		if ( in_array( $key, array( '_thumbnail_id', '_wp_attached_file', '_wp_attachment_metadata', '_elementor_data', '_elementor_page_settings', '_elementor_edit_mode' ), true ) ) {
 			$this->post( $post_id ); }
 	}
 
@@ -106,6 +109,17 @@ final class Changes {
 	/** Refresh the current theme's identity settings. */
 	public function theme() {
 		$this->queue( 'site', get_current_blog_id() ); }
+
+	/**
+	 * Rebuild after integration changes without starting work on our own activation.
+	 *
+	 * @param string $plugin Changed plugin basename.
+	 */
+	public function integration( $plugin ) {
+		if ( 'media-dependency-map/media-dependency-map.php' !== $plugin ) {
+			$this->queue( 'full', 0 );
+		}
+	}
 
 	/**
 	 * Persist and schedule a change without breaking the originating content save.

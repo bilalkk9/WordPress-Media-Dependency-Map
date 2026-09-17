@@ -2,9 +2,8 @@
 
 By [Bilal](https://profiles.wordpress.org/mbilalkk/).
 
-Development preview of a WordPress media dependency inspector. Version 0.3.0 adds resumable
-core scans, incremental indexing, a searchable dependency browser and CSV exports.
-Integration adapters and replacement remain pending.
+Development preview of a WordPress media dependency inspector. Version 0.4.0 adds read-only Elementor document scanning to the resumable index,
+dependency browser and CSV exports. ACF, WooCommerce and replacement remain pending.
 This is not a production release.
 
 ## Development
@@ -20,6 +19,8 @@ Use a site-specific WP-CLI `--path` for every operation. Never run bulk commands
 
 See [the plan](docs/plan.md), [architecture](docs/architecture.md) and the product specification.
 See [inspection commands and coverage](docs/core-inspection.md) for the current feature boundaries.
+
+See [Elementor coverage and limitations](docs/elementor.md) for the current integration milestone.
 
 ## License
 

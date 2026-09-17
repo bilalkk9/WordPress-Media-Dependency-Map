@@ -159,7 +159,7 @@ final class Controller {
 		$output = fopen( 'php://output', 'w' );
 		if ( false === $output ) {
 			return; }
-		fputcsv( $output, array( 'Attachment ID', 'Title', 'MIME type', 'Known core references', 'Core index current', 'Last seen (UTC)' ), ',', '"', '' );
+		fputcsv( $output, array( 'Attachment ID', 'Title', 'MIME type', 'Known references', 'Dependency index current', 'Last seen (UTC)' ), ',', '"', '' );
 		foreach ( $rows as $row ) {
 			fputcsv( $output, array( (int) $row->ID, Csv::cell( $row->post_title ), Csv::cell( $row->post_mime_type ), (int) $row->usage_count, $status['current'] ? 'yes' : 'no', $row->last_seen ?? '' ), ',', '"', '' );
 		}
@@ -214,7 +214,7 @@ final class Controller {
 			/* translators: %s: number of stored reference occurrences. */
 			return sprintf( _n( '%s known reference', '%s known references', $count, 'media-dependency-map' ), number_format_i18n( $count ) );
 		}
-		return $status['current'] ? __( 'No known core references', 'media-dependency-map' ) : __( 'Not fully scanned', 'media-dependency-map' );
+		return $status['current'] ? __( 'No known references', 'media-dependency-map' ) : __( 'Not fully scanned', 'media-dependency-map' );
 	}
 
 	/**
@@ -284,7 +284,7 @@ final class Controller {
 	public function assets( $hook ) {
 		if ( 'media_page_media-dependency-map' !== $hook || ! self::allowed() ) {
 			return; }
-		wp_enqueue_script( 'mdm-admin', plugins_url( 'assets/admin.js', dirname( __DIR__, 2 ) . '/media-dependency-map.php' ), array(), '0.3.0', true );
+		wp_enqueue_script( 'mdm-admin', plugins_url( 'assets/admin.js', dirname( __DIR__, 2 ) . '/media-dependency-map.php' ), array(), '0.4.0', true );
 		wp_localize_script(
 			'mdm-admin',
 			'mdmAdmin',

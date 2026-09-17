@@ -76,7 +76,7 @@ final class Commands {
 			if ( $store->queue_count() && ! $control->active_run && ! $store->next_item() ) {
 				\WP_CLI::error( 'Some queued changes failed. Start a full scan to retry.' );
 				return; }
-			\WP_CLI::success( $control->active_run || $store->queue_count() ? 'Batch saved. Resume to continue.' : 'Core index is up to date for the supported sources.' );
+			\WP_CLI::success( $control->active_run || $store->queue_count() ? 'Batch saved. Resume to continue.' : 'Dependency index is up to date for the supported sources.' );
 		} catch ( \Throwable $error ) {
 			\WP_CLI::error( 'Scan could not proceed. Check permissions, schema and whether another worker is active.' ); }
 	}
@@ -96,7 +96,7 @@ final class Commands {
 		if ( ! current_user_can( 'mdm_run_scans' ) || ! current_user_can( 'manage_options' ) ) {
 			\WP_CLI::error( 'Select an authorized administrator with --user.' );
 			return; }
-		\WP_CLI::confirm( 'Build a new core index?', $assoc_args );
+		\WP_CLI::confirm( 'Build a new dependency index?', $assoc_args );
 		$this->scan( array(), array( 'all' => true ) );
 	}
 

@@ -72,3 +72,23 @@ WordPress 7.1 with the previously recorded integrations.
   during the browser-driven scan. A full accessibility audit is still pending.
 - Integration-specific scanners, verified replacement, rollback, large-library
   benchmarks and Plugin Check remain later gates. This is a core-only preview.
+
+
+## Version 0.4.0 Elementor milestone (September 17, 2026)
+
+- All six api-local integration suites passed, including the installed Elementor 4.2.4
+  API fixtures. The fixture registered a temporary widget with real public control APIs;
+  it covered nested templates, media/gallery/repeater/URL/SVG controls, responsive values,
+  unresolved dynamics, unrelated numbers, malformed/oversized input and missing widgets.
+- PHPCS, PHPStan and the existing 23 unit tests passed. No plugin content mutation is
+  introduced. The scanner's stored-data equality assertion passed.
+- The initial responsive fixture exposed Elementor's editor-only control duplication;
+  active breakpoint expansion fixed the omission and the fixture then passed.
+- The activation fixture caught scheduling caused by watching active_plugins directly;
+  integration activation/deactivation hooks now exclude this plugin's own lifecycle.
+- A labeled draft Elementor page (115) was saved through Elementor's document API.
+  Attachment 72 now has two Elementor occurrences alongside its four core occurrences.
+- Complete live generation 10 processed 27 consumers with no errors or queued changes.
+  The signed-in browser showed both Elementor ID/URL paths; filtering to Elementor
+  retained exactly those two occurrences.
+- Phase 5 remains active: ACF and WooCommerce adapters are not yet implemented.
