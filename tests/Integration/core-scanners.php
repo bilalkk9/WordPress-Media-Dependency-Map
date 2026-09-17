@@ -13,6 +13,10 @@ $assert = static function ( $condition, $message ) {
 };
 $ids = array();
 $post_id = 0;
+$pattern_id = 0;
+$user_before = get_current_user_id();
+$admins = get_users( array( 'role' => 'administrator', 'number' => 1, 'fields' => 'ID' ) );
+wp_set_current_user( $admins[0] );
 $icon_before = get_option( 'site_icon', null );
 $logo_before = get_theme_mod( 'custom_logo', null );
 $widgets_before = get_option( 'widget_media_image', null );
@@ -62,6 +66,18 @@ try {
 	wp_update_post( array( 'ID' => $post_id, 'post_content' => str_repeat( '<img src="' . $url . '">', 100 ) ) );
 	$repeated = ( new Core( $resolver ) )->scan( $post_id );
 	$assert( 101 === count( $repeated ), 'Repeated occurrences or featured image were lost.' );
+	$pattern_id = wp_insert_post( array( 'post_type' => 'wp_block', 'post_status' => 'publish', 'post_title' => 'MDM pattern fixture', 'post_content' => '<img src="' . $url . '">' ) );
+	wp_update_post( array( 'ID' => $image, 'post_parent' => $post_id ) );
+	wp_update_post( array( 'ID' => $post_id, 'post_content' => wp_slash( '<!-- wp:block {"ref":' . $pattern_id . '} /-->[gallery][caption id="attachment_' . $image . '"]Image[/caption]' ) ) );
+	$extended = ( new Core( $resolver ) )->scan( $post_id );
+	$extended_paths = array_map( static function( $ref ) { return $ref->to_array()['data_path']; }, $extended );
+	$assert( (bool) preg_grep( '/synced\//', $extended_paths ), 'Synced pattern media missing.' );
+	$assert( (bool) preg_grep( '/children\//', $extended_paths ), 'Implicit gallery missing.' );
+	$assert( (bool) preg_grep( '/caption\/id$/', $extended_paths ), 'Caption ID missing.' );
+	wp_update_post( array( 'ID' => $pattern_id, 'post_content' => wp_slash( '<!-- wp:block {"ref":' . $pattern_id . '} /-->' ) ) );
+	$cycle = false;
+	try { ( new Core( $resolver ) )->scan( $post_id ); } catch ( RuntimeException $error ) { $cycle = true; }
+	$assert( $cycle, 'Pattern cycle was not rejected.' );
 	// Two attachments with identical upload paths must never be resolved as unique.
 	$duplicate = wp_insert_attachment( array( 'post_title' => 'MDM ambiguous fixture', 'post_mime_type' => 'image/png' ) );
 	$ids[] = $duplicate;
@@ -69,6 +85,8 @@ try {
 	$assert( null === $resolver->url( $url ), 'Ambiguous path became confirmed.' );
 	WP_CLI::success( 'Core scanners: URLs, registered sizes, ambiguity, nested blocks, HTML, shortcodes, identity and read-only safeguards passed.' );
 } finally {
+	wp_set_current_user( $user_before );
+	if ( $pattern_id ) { wp_delete_post( $pattern_id, true ); }
 	if ( null === $widgets_before ) { delete_option( 'widget_media_image' ); } else { update_option( 'widget_media_image', $widgets_before ); }
 	if ( null === $icon_before ) { delete_option( 'site_icon' ); } else { update_option( 'site_icon', $icon_before ); }
 	if ( null === $logo_before ) { remove_theme_mod( 'custom_logo' ); } else { set_theme_mod( 'custom_logo', $logo_before ); }

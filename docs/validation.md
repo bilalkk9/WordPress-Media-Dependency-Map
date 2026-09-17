@@ -48,3 +48,27 @@ the site's PHP configuration was not changed. Media processing tests must revisi
 GitHub Actions run 35095770839 passed the PHP 7.4/8.2/8.3 quality matrix and isolated
 WordPress 6.6.2 lifecycle, persistence and scanner integration tests. Local evidence uses
 WordPress 7.1 with the previously recorded integrations.
+
+
+## Version 0.3.0 local verification (September 17, 2026)
+
+- PHPCS and PHPStan level 5 passed; PHPUnit passed 23 tests and 28 assertions.
+- JavaScript syntax check passed.
+- All five integration suites passed on api-local: lifecycle, persistence, core
+  scanners, scan engine and admin browser. Fixtures use isolated temporary tables
+  for engine/database failure tests and clean up after themselves.
+- Engine checks cover lease expiry/fencing, checkpoint resume, deferred generation
+  publication, failure preservation, queue debouncing/racing revisions and deletion.
+- Admin checks cover permissions/nonces, escaping, SQL sort allowlists, filters,
+  confidence, batched usage counts and stale-index reporting.
+- Exact 0.3.0 ZIP installed on api-local. CLI batch, WordPress Cron event and CLI
+  resume completed generation 6 with 17 processed consumers, no errors, no queued
+  changes and current=true.
+- Live browser scan completed; demo attachment 72 has four occurrences in draft
+  post 74. Attachment 73 has no known core references. These labeled demonstration
+  fixtures remain available for manual review.
+- Browser detail links, usage filtering and filtered CSV download succeeded.
+  The native admin layout was visually checked; no console errors were observed
+  during the browser-driven scan. A full accessibility audit is still pending.
+- Integration-specific scanners, verified replacement, rollback, large-library
+  benchmarks and Plugin Check remain later gates. This is a core-only preview.

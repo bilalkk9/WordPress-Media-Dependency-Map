@@ -31,7 +31,7 @@ wp_set_current_user( $admins[0] );
 ob_start();
 ( new \Bilal\MediaDependencyMap\Plugin() )->render();
 $html = ob_get_clean();
-if ( false === strpos( $html, 'Not fully scanned' ) ) {
+if ( false === strpos( $html, 'Media Dependency Map' ) || false === strpos( $html, 'Coverage and limitations' ) ) {
 	throw new RuntimeException( 'Coverage status missing.' );
 }
 if ( isset( wp_load_alloptions()['mdm_settings'] ) ) {

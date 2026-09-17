@@ -73,4 +73,23 @@ final class Reference {
 	public function to_array() {
 		return $this->fields;
 	}
+
+	/**
+	 * Describe an indirect, read-only occurrence through a synced pattern.
+	 *
+	 * @throws \LengthException If the logical path exceeds the storage budget.
+	 * @param int    $post_id Referencing post.
+	 * @param string $prefix Pattern path.
+	 * @return self
+	 */
+	public function through_pattern( $post_id, $prefix ) {
+		$copy                         = clone $this;
+		$copy->fields['consumer_key'] = (string) $post_id;
+		$copy->fields['data_path']    = $prefix . '/' . $this->fields['data_path'];
+		if ( strlen( $copy->fields['data_path'] ) > 2048 ) {
+			throw new \LengthException( 'Pattern path exceeds the reference budget.' );
+		}
+		$copy->fields['reference_key'] = hash( 'sha256', (string) wp_json_encode( array( $copy->fields['adapter_id'], 'post', (string) $post_id, $copy->fields['data_path'], $copy->fields['reference_kind'], $copy->fields['attachment_id'] ) ) );
+		return $copy;
+	}
 }

@@ -30,6 +30,13 @@ final class Core implements Adapter {
 	private $url_cache = array();
 
 	/**
+	 * Ancestor pattern IDs used to reject cycles.
+	 *
+	 * @var int[]
+	 */
+	private $ancestors = array();
+
+	/**
 	 * Construct the scanner.
 	 *
 	 * @param Resolver $resolver Attachment resolver.
@@ -55,6 +62,9 @@ final class Core implements Adapter {
 	 * @return Reference[]
 	 */
 	public function scan( $consumer_id ) {
+		if ( in_array( $consumer_id, $this->ancestors, true ) || count( $this->ancestors ) > 8 ) {
+			throw new \RuntimeException( 'Cyclic or deeply nested synced pattern.' );
+		}
 		$this->url_cache = array();
 		$post            = get_post( $consumer_id );
 		if ( ! $post || 'revision' === $post->post_type || 'auto-draft' === $post->post_status ) {
@@ -75,6 +85,31 @@ final class Core implements Adapter {
 				}
 				$atts = shortcode_parse_atts( $match[3] );
 				$path = 'shortcodes/' . $index . '/' . $match[2];
+				if ( 'caption' === $match[2] && isset( $atts['id'] ) && preg_match( '/^attachment_([1-9][0-9]*)$/D', $atts['id'], $caption ) ) {
+					$this->candidate( $refs, $consumer_id, $path . '/id', 'id', $caption[1] );
+				}
+				if ( in_array( $match[2], array( 'gallery', 'playlist' ), true ) && empty( $atts['ids'] ) && empty( $atts['include'] ) ) {
+					$parent = isset( $atts['id'] ) ? absint( $atts['id'] ) : $consumer_id;
+					// phpcs:ignore WordPress.WP.PostsPerPage -- Bounded ID-only lookup with an overflow sentinel.
+					$children = get_posts(
+						array(
+							'post_type'      => 'attachment',
+							'post_status'    => 'inherit',
+							'post_parent'    => $parent,
+							'post_mime_type' => 'gallery' === $match[2] ? 'image' : ( ( $atts['type'] ?? 'audio' ) === 'video' ? 'video' : 'audio' ),
+							'exclude'        => isset( $atts['exclude'] ) ? wp_parse_id_list( $atts['exclude'] ) : array(),
+							// phpcs:ignore WordPress.WP.PostsPerPage -- ID-only overflow sentinel for a bounded consumer.
+							'posts_per_page' => 5001,
+							'fields'         => 'ids',
+						)
+					);
+					if ( count( $children ) > 5000 ) {
+						throw new \RuntimeException( 'Implicit gallery exceeds the reference budget.' );
+					}
+					foreach ( $children as $child ) {
+						$this->candidate( $refs, $consumer_id, $path . '/children/' . $child, 'id', $child );
+					}
+				}
 				foreach ( array( 'ids', 'include' ) as $key ) {
 					if ( in_array( $match[2], array( 'gallery', 'playlist' ), true ) && isset( $atts[ $key ] ) ) {
 						foreach ( explode( ',', $atts[ $key ] ) as $position => $id ) {
@@ -119,6 +154,20 @@ final class Core implements Adapter {
 		);
 		foreach ( $blocks as $index => $block ) {
 			$location = $path . '/' . $index;
+			if ( 'core/block' === $block['blockName'] && ! empty( $block['attrs']['ref'] ) ) {
+				$pattern_id = absint( $block['attrs']['ref'] );
+				if ( 'wp_block' !== get_post_type( $pattern_id ) || ! current_user_can( 'read_post', $pattern_id ) ) {
+					throw new \RuntimeException( 'Synced pattern is unavailable to the scan user.' );
+				}
+				$scanner            = new self( $this->resolver );
+				$scanner->ancestors = array_merge( $this->ancestors, array( $post_id ) );
+				foreach ( $scanner->scan( $pattern_id ) as $reference ) {
+					$refs[] = $reference->through_pattern( $post_id, $location . '/synced/' . $pattern_id );
+					if ( count( $refs ) > 5000 ) {
+						throw new \RuntimeException( 'Synced patterns exceed the reference budget.' );
+					}
+				}
+			}
 			foreach ( $schemas[ $block['blockName'] ] ?? array() as $attribute ) {
 				$value = $block['attrs'][ $attribute ] ?? null;
 				if ( is_array( $value ) ) {

@@ -24,12 +24,21 @@ final class Reference_Repository {
 	private $db;
 
 	/**
+	 * Index generation; zero is reserved for repository diagnostics.
+	 *
+	 * @var int
+	 */
+	private $generation;
+
+	/**
 	 * Create a repository.
 	 *
 	 * @param \wpdb $db Site connection.
+	 * @param int   $generation Index generation.
 	 */
-	public function __construct( \wpdb $db ) {
-		$this->db = $db;
+	public function __construct( \wpdb $db, $generation = 0 ) {
+		$this->db         = $db;
+		$this->generation = $generation;
 	}
 
 	/**
@@ -63,8 +72,9 @@ final class Reference_Repository {
 	 * @param string      $type Consumer type.
 	 * @param string      $key Consumer identity.
 	 * @param Reference[] $references Complete extracted references.
+	 * @param bool        $transaction Whether this method owns the transaction.
 	 */
-	public function reconcile( $run_id, $adapter, $type, $key, array $references ) {
+	public function reconcile( $run_id, $adapter, $type, $key, array $references, $transaction = true ) {
 		if ( count( $references ) > 5000 ) {
 			throw new \LengthException( 'Consumer exceeds the reference budget.' );
 		}
@@ -76,14 +86,16 @@ final class Reference_Repository {
 		}
 		$table = $this->db->prefix . 'mdm_references';
 		$runs  = $this->db->prefix . 'mdm_scan_runs';
-		$this->check( $this->db->query( 'START TRANSACTION' ) );
+		if ( $transaction ) {
+			$this->check( $this->db->query( 'START TRANSACTION' ) );
+		}
 		try {
 			// Lock the run to reject writes to failed/completed scans.
 			$status = $this->db->get_var( $this->db->prepare( 'SELECT status FROM %i WHERE id = %d FOR UPDATE', $runs, $run_id ) );
 			if ( 'running' !== $status ) {
 				throw new \RuntimeException( 'Scan is not running.' );
 			}
-			$existing = $this->db->get_results( $this->db->prepare( 'SELECT reference_key, first_seen_gmt FROM %i WHERE adapter_id = %s AND consumer_type = %s AND consumer_key = %s FOR UPDATE', $table, $adapter, $type, $key ), 'OBJECT_K' );
+			$existing = $this->db->get_results( $this->db->prepare( 'SELECT reference_key, first_seen_gmt FROM %i WHERE generation IN (%d, (SELECT active_generation FROM %i WHERE id = 1)) AND adapter_id = %s AND consumer_type = %s AND consumer_key = %s ORDER BY first_seen_gmt ASC FOR UPDATE', $table, $this->generation, $this->db->prefix . 'mdm_control', $adapter, $type, $key ), 'OBJECT_K' );
 			if ( $this->db->last_error ) {
 				throw new \RuntimeException( 'Reference lookup failed.' );
 			}
@@ -91,6 +103,7 @@ final class Reference_Repository {
 				$this->db->delete(
 					$table,
 					array(
+						'generation'    => $this->generation,
 						'adapter_id'    => $adapter,
 						'consumer_type' => $type,
 						'consumer_key'  => $key,
@@ -103,14 +116,19 @@ final class Reference_Repository {
 				$unique[ $row['reference_key'] ] = $row;
 			}
 			foreach ( $unique as $identity => $row ) {
+				$row['generation']     = $this->generation;
 				$row['scan_run_id']    = $run_id;
 				$row['first_seen_gmt'] = isset( $existing[ $identity ] ) ? $existing[ $identity ]->first_seen_gmt : gmdate( 'Y-m-d H:i:s' );
 				$row['last_seen_gmt']  = gmdate( 'Y-m-d H:i:s' );
 				$this->check( $this->db->insert( $table, $row ) );
 			}
-			$this->check( $this->db->query( 'COMMIT' ) );
+			if ( $transaction ) {
+				$this->check( $this->db->query( 'COMMIT' ) );
+			}
 		} catch ( \Throwable $error ) {
-			$this->db->query( 'ROLLBACK' );
+			if ( $transaction ) {
+				$this->db->query( 'ROLLBACK' );
+			}
 			throw $error;
 		}
 	}
@@ -147,7 +165,7 @@ final class Reference_Repository {
 	 * @return array<object>
 	 */
 	public function for_attachment( $attachment_id, $after_id = 0 ) {
-		$rows = $this->db->get_results( $this->db->prepare( 'SELECT * FROM %i WHERE attachment_id = %d AND id > %d ORDER BY id ASC LIMIT 100', $this->db->prefix . 'mdm_references', $attachment_id, $after_id ) );
+		$rows = $this->db->get_results( $this->db->prepare( 'SELECT * FROM %i WHERE generation = %d AND attachment_id = %d AND id > %d ORDER BY id ASC LIMIT 100', $this->db->prefix . 'mdm_references', $this->generation, $attachment_id, $after_id ) );
 		if ( $this->db->last_error ) {
 			throw new \RuntimeException( 'Reference lookup failed.' );
 		}

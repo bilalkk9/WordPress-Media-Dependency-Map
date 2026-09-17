@@ -55,5 +55,8 @@ jobs:
           wp eval-file "$GITHUB_WORKSPACE/tests/Integration/lifecycle.php" --path=/tmp/mdm-wordpress
           wp eval-file "$GITHUB_WORKSPACE/tests/Integration/persistence.php" --path=/tmp/mdm-wordpress
           wp eval-file "$GITHUB_WORKSPACE/tests/Integration/core-scanners.php" --path=/tmp/mdm-wordpress
+          wp eval-file "$GITHUB_WORKSPACE/tests/Integration/scan-engine.php" --path=/tmp/mdm-wordpress
+          wp eval-file "$GITHUB_WORKSPACE/tests/Integration/admin-browser.php" --path=/tmp/mdm-wordpress
+          wp mdm scan --all --user=admin --path=/tmp/mdm-wordpress
           wp mdm status --user=admin --path=/tmp/mdm-wordpress
           if wp mdm status --path=/tmp/mdm-wordpress; then exit 1; fi

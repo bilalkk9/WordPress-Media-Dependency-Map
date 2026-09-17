@@ -2,9 +2,9 @@
 
 By [Bilal](https://profiles.wordpress.org/mbilalkk/).
 
-Development preview of a WordPress media dependency inspector. Version 0.2.0 adds transactional
-reference storage and read-only core inspections through WP-CLI. Whole-site scans, the dependency
-browser and replacement are pending.
+Development preview of a WordPress media dependency inspector. Version 0.3.0 adds resumable
+core scans, incremental indexing, a searchable dependency browser and CSV exports.
+Integration adapters and replacement remain pending.
 This is not a production release.
 
 ## Development

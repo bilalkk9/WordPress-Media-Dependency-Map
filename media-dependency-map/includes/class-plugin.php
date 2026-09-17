@@ -14,12 +14,59 @@ final class Plugin {
 
 	/** Register WordPress hooks. */
 	public function register() {
+		global $wpdb;
+		$engine = self::engine();
+		// phpcs:ignore WordPress.WP.CronInterval -- Watchdog processes short resumable batches only after an explicit scan.
+		add_filter( 'cron_schedules', array( $this, 'schedules' ) );
+		add_action( 'mdm_process_queue', array( $engine, 'tick' ) );
+		( new Index\Changes( new Persistence\Scan_Repository( $wpdb ), $engine ) )->register();
+		if ( is_admin() ) {
+			( new Admin\Controller( new Persistence\Browser_Repository( $wpdb ), $engine ) )->register(); }
 		if ( defined( 'WP_CLI' ) && constant( 'WP_CLI' ) ) {
 			require_once __DIR__ . '/cli/class-commands.php';
 			\WP_CLI::add_command( 'mdm', new CLI\Commands() );
 		}
 		add_action( 'admin_init', array( $this, 'upgrade' ) );
 		add_action( 'admin_menu', array( $this, 'add_menu' ) );
+	}
+
+	/**
+	 * Compose core adapters outside the generic scan engine.
+	 *
+	 * @return Index\Engine
+	 */
+	public static function engine() {
+		global $wpdb;
+		return new Index\Engine(
+			new Persistence\Scan_Repository( $wpdb ),
+			static function ( $generation ) use ( $wpdb ) {
+				$resolver = new Matching\Resolver( new Persistence\Attachment_Repository( $wpdb, $generation ) );
+				return array(
+					'core'          => array(
+						'source'  => 'post',
+						'scanner' => new Adapters\Core( $resolver ),
+					),
+					'site-identity' => array(
+						'source'  => 'site',
+						'scanner' => new Adapters\Site_Identity( $resolver ),
+					),
+				);
+			}
+		);
+	}
+
+	/**
+	 * Add a traffic-driven watchdog schedule.
+	 *
+	 * @param array $schedules Existing schedules.
+	 * @return array
+	 */
+	public function schedules( $schedules ) {
+		$schedules['mdm_minute'] = array(
+			'interval' => 60,
+			'display'  => __( 'Media Dependency Map: every minute', 'media-dependency-map' ),
+		);
+		return $schedules;
 	}
 
 	/** Upgrade on authorized administration requests, including already-active installs. */
@@ -53,9 +100,7 @@ final class Plugin {
 
 	/** Render the protected preview screen. */
 	public function render() {
-		if ( ! current_user_can( 'mdm_view_dependencies' ) ) {
-			wp_die( esc_html__( 'You cannot view media dependencies.', 'media-dependency-map' ) );
-		}
-		require __DIR__ . '/views/dependency-map.php';
+		global $wpdb;
+		( new Admin\Controller( new Persistence\Browser_Repository( $wpdb ), self::engine() ) )->render();
 	}
 }

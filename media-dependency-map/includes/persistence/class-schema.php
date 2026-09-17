@@ -12,8 +12,8 @@ defined( 'ABSPATH' ) || exit;
 /** Owns the plugin's table allowlist and schema version. */
 final class Schema {
 
-	const VERSION = '1';
-	const TABLES  = array( 'references', 'scan_runs', 'operations', 'operation_items' );
+	const VERSION = '2';
+	const TABLES  = array( 'references', 'scan_runs', 'operations', 'operation_items', 'control', 'queue', 'locks', 'paths' );
 
 	/**
 	 * Create or upgrade tables idempotently; only publish the version on success.
@@ -29,6 +29,7 @@ final class Schema {
 		$schemas = array(
 			"CREATE TABLE {$prefix}references (
 				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+				generation bigint(20) unsigned NOT NULL DEFAULT 0,
 				reference_key char(64) NOT NULL,
 				attachment_id bigint(20) unsigned DEFAULT NULL,
 				adapter_id varchar(64) NOT NULL,
@@ -45,10 +46,41 @@ final class Schema {
 				last_seen_gmt datetime NOT NULL,
 				status varchar(16) NOT NULL DEFAULT 'current',
 				PRIMARY KEY  (id),
-				UNIQUE KEY reference_key (reference_key),
-				KEY attachment_status (attachment_id,status),
+				UNIQUE KEY reference_generation (generation,reference_key),
+				KEY attachment_generation (generation,attachment_id,status),
 				KEY consumer (adapter_id,consumer_type,consumer_key),
 				KEY scan_adapter (scan_run_id,adapter_id,status)
+			) ENGINE=InnoDB $charset;",
+			"CREATE TABLE {$prefix}control (
+				id bigint(20) unsigned NOT NULL,
+				active_generation bigint(20) unsigned NOT NULL DEFAULT 0,
+				active_run bigint(20) unsigned NOT NULL DEFAULT 0,
+				last_run bigint(20) unsigned NOT NULL DEFAULT 0,
+				owner_id bigint(20) unsigned NOT NULL DEFAULT 0,
+				revision bigint(20) unsigned NOT NULL DEFAULT 0,
+				PRIMARY KEY  (id)
+			) ENGINE=InnoDB $charset;",
+			"CREATE TABLE {$prefix}locks (
+				name varchar(32) NOT NULL,
+				token char(36) NOT NULL,
+				expires_gmt datetime NOT NULL,
+				PRIMARY KEY  (name)
+			) ENGINE=InnoDB $charset;",
+			"CREATE TABLE {$prefix}queue (
+				item_key varchar(64) NOT NULL,
+				source varchar(16) NOT NULL,
+				consumer_id bigint(20) unsigned NOT NULL DEFAULT 0,
+				sequence bigint(20) unsigned NOT NULL,
+				status varchar(16) NOT NULL DEFAULT 'pending',
+				PRIMARY KEY  (item_key),
+				KEY sequence_status (status,sequence)
+			) ENGINE=InnoDB $charset;",
+			"CREATE TABLE {$prefix}paths (
+				generation bigint(20) unsigned NOT NULL,
+				path_hash char(64) NOT NULL,
+				attachment_id bigint(20) unsigned NOT NULL,
+				PRIMARY KEY  (generation,path_hash,attachment_id),
+				KEY attachment (generation,attachment_id)
 			) ENGINE=InnoDB $charset;",
 			"CREATE TABLE {$prefix}scan_runs (
 				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -101,6 +133,18 @@ final class Schema {
 			if ( ! $table || 'InnoDB' !== $table->Engine ) {
 				throw new \RuntimeException( 'Media Dependency Map requires transactional InnoDB tables.' );
 			}
+		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Remove the superseded uniqueness constraint after installing its replacement.
+		$legacy = $db->get_results( $db->prepare( 'SHOW INDEX FROM %i WHERE Key_name = %s', $prefix . 'references', 'reference_key' ) );
+		if ( $legacy ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Allow generation-scoped reference keys after migration.
+			if ( false === $db->query( $db->prepare( 'ALTER TABLE %i DROP INDEX reference_key', $prefix . 'references' ) ) ) {
+				throw new \RuntimeException( 'Reference generation migration failed.' );
+			}
+		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Singleton control row is idempotent.
+		if ( false === $db->query( $db->prepare( 'INSERT IGNORE INTO %i (id) VALUES (1)', $prefix . 'control' ) ) ) {
+			throw new \RuntimeException( 'Scan control initialization failed.' );
 		}
 		update_option( 'mdm_schema_version', self::VERSION, false );
 	}

@@ -8,9 +8,9 @@ Only one phase is active at a time. Each phase must pass its checks before the n
 | --- | --- | --- |
 | 0 | Repository, tooling, activation and development environment | Foundation checks passed |
 | 1 | Domain model, persistence, migrations | Reference persistence checks passed |
-| 2 | Resolver and core adapters | Active: core inspection verified; coverage extensions remain |
-| 3 | Batched scans, locks, resume, incremental work and CLI | Pending |
-| 4 | Dependency browser, coverage, exports and accessibility | Pending |
+| 2 | Resolver and core adapters | Core fixtures passed, including synced patterns and implicit galleries |
+| 3 | Batched scans, locks, resume, incremental work and CLI | Preview validation passed |
+| 4 | Dependency browser, coverage, exports and accessibility | Preview validation passed |
 | 5 | Elementor, ACF and WooCommerce adapters | Pending |
 | 6 | Verified replacement and conflict-aware rollback | Pending |
 | 7 | Compatibility, performance and release packaging | Pending |
@@ -18,9 +18,11 @@ Only one phase is active at a time. Each phase must pass its checks before the n
 Bricks and WPBakery are compatibility fixtures; dedicated scanners are outside the current scope.
 Product name and slug remain provisional. Directory lookup alone cannot establish trademark clearance.
 
-Version 0.2.0 delivers the reference value model, transactional consumer reconciliation, schema
-installation and initial read-only core adapters. Operation tables are reserved now; journal
-creation, encryption/retention and mutation APIs remain gated by Phase 6. The four-table schema
-will evolve before release. Phase 2 coverage gaps are explicit in core-inspection.md; no
-site-wide index-completeness claim is made. Diagnostic CLI commands support this phase and do
-not implement the Phase 3 scan engine.
+Version 0.3.0 adds generation publication, a fenced lease, resumable checkpoints,
+incremental queues and an admin dependency browser. Eight site-prefixed tables now
+include coordination and path-index storage. Replacement journals remain reserved;
+mutation and rollback APIs are gated by Phase 6. Core coverage is not whole-site
+coverage when unsupported integrations are present.
+
+Further release work includes large-library benchmarks, broader accessibility audits,
+attachment-targeted verification and the integration/replacement phases above.

@@ -22,12 +22,21 @@ final class Attachment_Repository {
 	private $db;
 
 	/**
+	 * Completed path-index generation, or null for standalone diagnostics.
+	 *
+	 * @var int|null
+	 */
+	private $generation;
+
+	/**
 	 * Construct the repository.
 	 *
-	 * @param \wpdb $db Site connection.
+	 * @param \wpdb    $db Site connection.
+	 * @param int|null $generation Indexed path generation.
 	 */
-	public function __construct( \wpdb $db ) {
-		$this->db = $db;
+	public function __construct( \wpdb $db, $generation = null ) {
+		$this->db         = $db;
+		$this->generation = $generation;
 	}
 
 	/**
@@ -38,6 +47,11 @@ final class Attachment_Repository {
 	 * @return int|null Unique attachment, null when absent or ambiguous.
 	 */
 	public function resolve_path( $path ) {
+		if ( null !== $this->generation ) {
+			$ids = $this->db->get_col( $this->db->prepare( 'SELECT attachment_id FROM %i WHERE generation = %d AND path_hash = %s LIMIT 2', $this->db->prefix . 'mdm_paths', $this->generation, hash( 'sha256', $path ) ) );
+			$this->check_error();
+			return 1 === count( $ids ) ? (int) $ids[0] : null;
+		}
 		$ids = $this->db->get_col( $this->db->prepare( 'SELECT DISTINCT p.ID FROM %i p INNER JOIN %i m ON p.ID = m.post_id WHERE p.post_type = %s AND m.meta_key = %s AND BINARY m.meta_value = %s LIMIT 2', $this->db->posts, $this->db->postmeta, 'attachment', '_wp_attached_file', $path ) );
 		$this->check_error();
 		// Search only a bounded candidate set; each filename is validated below.
@@ -66,7 +80,7 @@ final class Attachment_Repository {
 	 * @param array $meta Attachment metadata.
 	 * @return string[]
 	 */
-	private function metadata_paths( array $meta ) {
+	public function metadata_paths( array $meta ) {
 		if ( empty( $meta['file'] ) || ! is_string( $meta['file'] ) ) {
 			return array();
 		}

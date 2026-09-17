@@ -3,6 +3,7 @@ define( 'ABSPATH', __DIR__ . '/' );
 require __DIR__ . '/schema-stub.php';
 require dirname( __DIR__ ) . '/media-dependency-map/includes/domain/class-reference.php';
 require dirname( __DIR__ ) . '/media-dependency-map/includes/matching/class-resolver.php';
+require dirname( __DIR__ ) . '/media-dependency-map/includes/admin/class-csv.php';
 require dirname( __DIR__ ) . '/media-dependency-map/includes/class-lifecycle.php';
 
 $GLOBALS['mdm_test_options'] = array();

@@ -11,7 +11,8 @@ Replacement remains unavailable until preview, authorization, journal and rollba
 
 ## Persistence
 
-Dedicated prefixed tables will store references, scan runs, operations and operation items.
+Eight prefixed tables store references, scan runs, control state, leases, queued changes,
+upload paths and reserved operation journals.
 Use deterministic reference keys, indexed consumer/attachment lookups and generation-based
 publication so failed scans cannot discard the last successful index. SQL belongs in repositories.
 Settings and schema versions are not autoloaded. Deactivation preserves data; uninstall requires

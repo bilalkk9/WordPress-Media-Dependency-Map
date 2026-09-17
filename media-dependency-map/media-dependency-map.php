@@ -3,7 +3,7 @@
  * Plugin Name: Media Dependency Map
  * Plugin URI: https://github.com/bilalkk9/WordPress-Media-Dependency-Map
  * Description: Inspect known Media Library dependencies and scan coverage. Development preview.
- * Version: 0.2.0
+ * Version: 0.3.0
  * Requires at least: 6.6
  * Requires PHP: 7.4
  * Author: Bilal

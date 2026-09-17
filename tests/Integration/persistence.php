@@ -52,7 +52,8 @@ try {
 	catch ( RuntimeException $error ) { $rejected = true; }
 	$assert( $rejected, 'Completed run accepted writes.' );
 	// Verify opted-in removal against disposable tables in this same site's database.
-	$isolated = clone $wpdb;
+	$isolated = new wpdb( DB_USER, DB_PASSWORD, DB_NAME, DB_HOST );
+	$isolated->set_prefix( $wpdb->prefix );
 	$isolated->prefix = $wpdb->prefix . 'mdm_fixture_';
 	$saved_settings = get_option( 'mdm_settings' );
 	try {
