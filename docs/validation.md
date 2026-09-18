@@ -135,3 +135,19 @@ WordPress 7.1 with the previously recorded integrations.
 - Translation template generated with WP-CLI. This remains a development build:
   no claims of live ACF Pro coverage, large-library performance qualification,
   full accessibility certification or WordPress.org readiness are made.
+
+### Packaged-build verification
+
+- The 0.6.0 ZIP contains 32 distributable entries; the installed plugin matched
+  every archive file byte-for-byte. No development tooling or test fixtures ship.
+- GitHub Actions run 35336798975 passed the WordPress integration job and all
+  PHP 7.4 / 8.2 / 8.3 quality jobs for commit 05191d4.
+- Final Plugin Check output has one distribution-specific Update URI error and
+  one bounded-gallery query warning; the missing header and global-variable
+  warnings were resolved.
+- A repeat fixture encountered a transient Elementor consumer failure under local
+  load; the engine correctly retained the previous published generation. A direct
+  retry of the same Elementor document returned both references in 0.49 seconds.
+  The fixture now explicitly checks scan freshness before testing protection.
+- The repeat replacement fixture subsequently passed, including expired-journal
+  cleanup, followed by a successful full scan of the installed package.

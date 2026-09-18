@@ -14,7 +14,7 @@ $service = new Service( $wpdb ); $operations = array();
 $scan = static function() use ( $wpdb ) {
  $engine = Plugin::engine(); $store = new Scan_Repository( $wpdb );
  if ( $store->control()->active_run ) { for ( $i = 0; $i < 100 && $store->control()->active_run; ++$i ) { $engine->tick(); } }
- $engine->start(); for ( $i = 0; $i < 200; ++$i ) { $engine->tick(); if ( ! $store->control()->active_run && ! $store->next_item() ) { return; } } throw new RuntimeException( 'Scan did not finish.' );
+ $engine->start(); for ( $i = 0; $i < 200; ++$i ) { $engine->tick(); if ( ! $store->control()->active_run && ! $store->next_item() ) { if ( ! ( new \Bilal\MediaDependencyMap\Persistence\Browser_Repository( $wpdb ) )->status()['current'] ) { throw new RuntimeException( 'Fixture requires a successful current scan; inspect the last run for consumer failures.' ); } return; } } throw new RuntimeException( 'Scan did not finish.' );
 };
 try {
  $scan();
