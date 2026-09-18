@@ -284,7 +284,7 @@ final class Controller {
 	public function assets( $hook ) {
 		if ( 'media_page_media-dependency-map' !== $hook || ! self::allowed() ) {
 			return; }
-		wp_enqueue_script( 'mdm-admin', plugins_url( 'assets/admin.js', dirname( __DIR__, 2 ) . '/media-dependency-map.php' ), array(), '0.5.0', true );
+		wp_enqueue_script( 'mdm-admin', plugins_url( 'assets/admin.js', dirname( __DIR__, 2 ) . '/media-dependency-map.php' ), array(), '0.6.0', true );
 		wp_localize_script(
 			'mdm-admin',
 			'mdmAdmin',
@@ -292,7 +292,7 @@ final class Controller {
 				'nonce'    => wp_create_nonce( 'mdm_scan' ),
 				'url'      => admin_url( 'admin-ajax.php' ),
 				'error'    => __( 'Automatic progress paused. Use Resume scan to continue.', 'media-dependency-map' ),
-				'progress' => __( 'Processing scan batches…', 'media-dependency-map' ),
+				'progress' => __( 'Processing scan batchesâ€¦', 'media-dependency-map' ),
 			)
 		);
 	}

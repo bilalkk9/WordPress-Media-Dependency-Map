@@ -48,6 +48,10 @@ final class Browser_Repository {
 				$adapters[] = 'acf-' . $source;
 			}
 		}
+		if ( \Bilal\MediaDependencyMap\Adapters\Woocommerce::available() ) {
+			$adapters[] = 'woocommerce-post';
+			$adapters[] = 'woocommerce-term';
+		}
 		$matching = $run && ( $run->state['adapters'] ?? array() ) === $adapters;
 		return array(
 			'generation'   => (int) $control->active_generation,
@@ -131,7 +135,9 @@ final class Browser_Repository {
 		if ( in_array( $confidence, array( 'exact', 'strong', 'heuristic', 'unresolved' ), true ) ) {
 			$where       .= ' AND confidence = %s';
 			$parameters[] = $confidence; }
-		if ( 'acf' === $adapter ) {
+		if ( 'woocommerce' === $adapter ) {
+			$where .= " AND adapter_id IN ('woocommerce-post','woocommerce-term')";
+		} elseif ( 'acf' === $adapter ) {
 			$where .= " AND adapter_id IN ('acf-post','acf-term','acf-user','acf-comment','acf-site')";
 		} elseif ( in_array( $adapter, array( 'core', 'site-identity', 'elementor' ), true ) ) {
 			$where       .= ' AND adapter_id = %s';

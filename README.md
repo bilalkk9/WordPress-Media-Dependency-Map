@@ -2,9 +2,15 @@
 
 By [Bilal](https://profiles.wordpress.org/mbilalkk/).
 
-Development preview of a WordPress media dependency inspector. Version 0.5.0 adds field-aware ACF scanning across posts, terms, users, comments and
-default options, alongside Elementor and core references. WooCommerce and replacement remain pending.
-This is not a production release.
+Version 0.6.0 is a testable development build with core, Elementor, ACF and WooCommerce
+media dependency scanning, an admin browser, CSV export, resumable scans and WP-CLI.
+It adds dry-run featured-image replacement, conflict-aware rollback, opt-in deletion
+protection and journal retention settings. Complex content and integration references
+remain read-only. This is not yet a production or WordPress.org release.
+
+Use **Media > Dependency Map** to scan, **Media > Media replacement** for dry runs,
+and **Media > Dependency settings** for retention and deletion protection.
+See [replacement scope](docs/replacement.md) and [validation](docs/validation.md).
 
 ## Development
 

@@ -23,3 +23,10 @@ require_once __DIR__ . '/index/class-changes.php';
 require_once __DIR__ . '/persistence/class-browser-repository.php';
 require_once __DIR__ . '/admin/class-csv.php';
 require_once __DIR__ . '/admin/class-controller.php';
+
+require_once __DIR__ . '/adapters/class-woocommerce.php';
+
+require_once __DIR__ . '/replacement/class-service.php';
+require_once __DIR__ . '/admin/class-replacement.php';
+
+require_once __DIR__ . '/admin/class-protection.php';

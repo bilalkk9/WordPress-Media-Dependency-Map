@@ -276,7 +276,7 @@ final class Core implements Adapter {
 		}
 		$id         = 'id' === $kind ? $this->resolver->id( $value ) : $this->url_cache[ (string) $value ];
 		$confidence = null === $id ? 'unresolved' : ( 'id' === $kind ? 'exact' : 'strong' );
-		$refs[]     = new Reference( $this->id(), 'post', (string) $post_id, $path, $kind, $id, $confidence, (string) $value );
+		$refs[]     = new Reference( $this->id(), 'post', (string) $post_id, $path, $kind, $id, $confidence, (string) $value, 'featured_image' === $path && ! in_array( get_post_type( $post_id ), array( 'product', 'product_variation', 'attachment', 'revision' ), true ) );
 		if ( count( $refs ) > 5000 ) {
 			throw new \RuntimeException( 'Consumer exceeds the reference budget.' );
 		}

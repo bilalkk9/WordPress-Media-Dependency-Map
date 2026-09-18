@@ -1,6 +1,6 @@
 <?php
 /**
- * Validated, read-only reference value.
+ * Validated reference value.
  *
  * @package Bilal\MediaDependencyMap
  */
@@ -20,7 +20,7 @@ final class Reference {
 	private $fields;
 
 	/**
-	 * Create a reference. Replacement remains unavailable in this milestone.
+	 * Create a reference with explicit writer eligibility.
 	 *
 	 * @throws \InvalidArgumentException For invalid reference fields.
 	 * @param string   $adapter Adapter identifier.
@@ -31,8 +31,9 @@ final class Reference {
 	 * @param int|null $attachment_id Resolved attachment or null.
 	 * @param string   $confidence Exact, strong, heuristic or unresolved.
 	 * @param string   $raw_value Value to fingerprint; never retained.
+	 * @param bool     $replaceable Whether a verified writer supports this location.
 	 */
-	public function __construct( $adapter, $consumer_type, $consumer_key, $path, $kind, $attachment_id, $confidence, $raw_value ) {
+	public function __construct( $adapter, $consumer_type, $consumer_key, $path, $kind, $attachment_id, $confidence, $raw_value, $replaceable = false ) {
 		foreach ( array( $adapter, $consumer_type, $kind ) as $identifier ) {
 			if ( ! preg_match( '/^[a-z][a-z0-9_-]{0,63}$/D', $identifier ) ) {
 				throw new \InvalidArgumentException( 'Invalid reference identifier.' );
@@ -61,7 +62,7 @@ final class Reference {
 			'attachment_id'  => $attachment_id,
 			'confidence'     => $confidence,
 			'value_hash'     => hash( 'sha256', $raw_value ),
-			'replaceability' => 'read-only',
+			'replaceability' => $replaceable && 'exact' === $confidence ? 'replaceable' : 'read-only',
 		);
 	}
 
@@ -83,9 +84,10 @@ final class Reference {
 	 * @return self
 	 */
 	public function through_pattern( $post_id, $prefix ) {
-		$copy                         = clone $this;
-		$copy->fields['consumer_key'] = (string) $post_id;
-		$copy->fields['data_path']    = $prefix . '/' . $this->fields['data_path'];
+		$copy                           = clone $this;
+		$copy->fields['replaceability'] = 'read-only';
+		$copy->fields['consumer_key']   = (string) $post_id;
+		$copy->fields['data_path']      = $prefix . '/' . $this->fields['data_path'];
 		if ( strlen( $copy->fields['data_path'] ) > 2048 ) {
 			throw new \LengthException( 'Pattern path exceeds the reference budget.' );
 		}

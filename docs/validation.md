@@ -111,3 +111,27 @@ WordPress 7.1 with the previously recorded integrations.
 - Persistent manual demos: draft page 142, category 5, field group 140, attachment 72.
   The browser ACF filter displayed the page and category with their exact field paths.
 - WooCommerce, verified replacement/rollback and remaining release gates are pending.
+
+
+## Version 0.6.0 development build (September 18, 2026)
+
+- All nine api-local integration suites passed: lifecycle, persistence, core,
+  engine, browser, Elementor, ACF, WooCommerce and replacement/protection.
+- WooCommerce 11.1.0 fixtures verified product/variation/category media and downloads,
+  inherited-image exclusion, permissions and unchanged scanned metadata.
+- Replacement fixtures verified no-write previews, apply, repeated-request safety,
+  rollback, apply/rollback conflicts preserving later edits, permissions and opt-in
+  deletion protection. The thumbnail writer requires InnoDB WordPress tables.
+- Live admin operation 6 previewed attachment 72 -> 73, changed only demo post 74's
+  featured image and successfully rolled it back. Seven other references remained
+  read-only. The settings screen showed warn-only defaults and 30-day retention.
+- PHPCS and PHPUnit passed (23 tests / 28 assertions); JavaScript syntax passed.
+- Composer audit of the locked dependencies reported no vulnerability advisories.
+- Official Plugin Check identified the GitHub Update URI as incompatible with
+  WordPress.org distribution. It is intentionally retained for this GitHub build.
+  The missing Tested up to header and uninstall global prefixes were corrected.
+  The bounded implicit-gallery exclusion query has a performance warning; it is
+  necessary to match the shortcode's exclude attribute, and fails above its budget.
+- Translation template generated with WP-CLI. This remains a development build:
+  no claims of live ACF Pro coverage, large-library performance qualification,
+  full accessibility certification or WordPress.org readiness are made.

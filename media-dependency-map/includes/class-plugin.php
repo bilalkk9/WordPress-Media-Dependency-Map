@@ -16,11 +16,13 @@ final class Plugin {
 	public function register() {
 		global $wpdb;
 		$engine = self::engine();
+		( new Admin\Protection() )->register();
 		// phpcs:ignore WordPress.WP.CronInterval -- Watchdog processes short resumable batches only after an explicit scan.
 		add_filter( 'cron_schedules', array( $this, 'schedules' ) );
 		add_action( 'mdm_process_queue', array( $engine, 'tick' ) );
 		( new Index\Changes( new Persistence\Scan_Repository( $wpdb ), $engine ) )->register();
 		if ( is_admin() ) {
+			( new Admin\Replacement() )->register();
 			( new Admin\Controller( new Persistence\Browser_Repository( $wpdb ), $engine ) )->register(); }
 		if ( defined( 'WP_CLI' ) && constant( 'WP_CLI' ) ) {
 			require_once __DIR__ . '/cli/class-commands.php';
@@ -62,6 +64,14 @@ final class Plugin {
 						$adapters[ 'acf-' . $source ] = array(
 							'source'  => $source,
 							'scanner' => new Adapters\Acf( $resolver, $source ),
+						);
+					}
+				}
+				if ( Adapters\Woocommerce::available() ) {
+					foreach ( array( 'post', 'term' ) as $source ) {
+						$adapters[ 'woocommerce-' . $source ] = array(
+							'source'  => $source,
+							'scanner' => new Adapters\Woocommerce( $resolver, $source ),
 						);
 					}
 				}

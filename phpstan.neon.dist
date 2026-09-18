@@ -6,3 +6,4 @@ parameters:
         - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
         - vendor/wp-cli/wp-cli/php/class-wp-cli.php
         - tests/stubs/acf.php
+        - tests/stubs/woocommerce.php

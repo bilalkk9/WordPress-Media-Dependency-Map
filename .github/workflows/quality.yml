@@ -77,3 +77,10 @@ jobs:
           wp mdm scan --all --user=admin --path=/tmp/mdm-wordpress
           wp plugin deactivate advanced-custom-fields elementor --path=/tmp/mdm-wordpress
           wp mdm scan --all --user=admin --path=/tmp/mdm-wordpress
+      - name: Verify WooCommerce and replacement safeguards
+        run: |
+          wp core update --version=7.1 --path=/tmp/mdm-wordpress
+          wp core update-db --path=/tmp/mdm-wordpress
+          wp plugin install woocommerce --version=11.1.0 --activate --path=/tmp/mdm-wordpress
+          wp eval-file "$GITHUB_WORKSPACE/tests/Integration/woocommerce.php" --path=/tmp/mdm-wordpress
+          wp eval-file "$GITHUB_WORKSPACE/tests/Integration/replacement.php" --path=/tmp/mdm-wordpress

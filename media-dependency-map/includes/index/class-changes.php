@@ -54,6 +54,8 @@ final class Changes {
 		add_action( 'elementor/editor/after_save', array( $this, 'post' ) );
 		add_action( 'activated_plugin', array( $this, 'integration' ) );
 		add_action( 'deactivated_plugin', array( $this, 'integration' ) );
+		add_action( 'woocommerce_update_product', array( $this, 'post' ), 30 );
+		add_action( 'woocommerce_update_product_variation', array( $this, 'post' ), 30 );
 		add_action( 'acf/save_post', array( $this, 'acf_saved' ), 30 );
 		add_action( 'acf/update_field_group', array( $this, 'acf_schema' ), 30 );
 		add_action( 'acf/delete_field_group', array( $this, 'acf_schema' ), 30 );
@@ -62,7 +64,7 @@ final class Changes {
 				add_action(
 					$event . '_' . $source . '_meta',
 					function ( $meta_id, $id ) use ( $source ) {
-						if ( \Bilal\MediaDependencyMap\Adapters\Acf::available() ) {
+						if ( \Bilal\MediaDependencyMap\Adapters\Acf::available() || ( 'term' === $source && \Bilal\MediaDependencyMap\Adapters\Woocommerce::available() ) ) {
 							$this->queue( $source, $id );
 						}
 					},
@@ -73,7 +75,7 @@ final class Changes {
 			add_action(
 				'deleted_' . $source,
 				function ( $id ) use ( $source ) {
-					if ( \Bilal\MediaDependencyMap\Adapters\Acf::available() ) {
+					if ( \Bilal\MediaDependencyMap\Adapters\Acf::available() || ( 'term' === $source && \Bilal\MediaDependencyMap\Adapters\Woocommerce::available() ) ) {
 						$this->queue( $source, $id );
 					}
 				},
@@ -120,7 +122,7 @@ final class Changes {
 	 * @param string    $key Metadata key.
 	 */
 	public function meta( $meta_id, $post_id, $key ) {
-		if ( \Bilal\MediaDependencyMap\Adapters\Acf::available() || in_array( $key, array( '_thumbnail_id', '_wp_attached_file', '_wp_attachment_metadata', '_elementor_data', '_elementor_page_settings', '_elementor_edit_mode' ), true ) ) {
+		if ( ( \Bilal\MediaDependencyMap\Adapters\Acf::available() || \Bilal\MediaDependencyMap\Adapters\Woocommerce::available() ) || in_array( $key, array( '_thumbnail_id', '_wp_attached_file', '_wp_attachment_metadata', '_elementor_data', '_elementor_page_settings', '_elementor_edit_mode' ), true ) ) {
 			$this->post( $post_id ); }
 	}
 

@@ -50,7 +50,7 @@ try {
 	$assert( count( array_filter( $rows, static function( $row ) { return 'exact' === $row['confidence']; } ) ) >= 9, 'Core block or shortcode IDs missing.' );
 	$assert( count( array_filter( $rows, static function( $row ) { return 'strong' === $row['confidence']; } ) ) >= 7, 'HTML or URL attributes missing.' );
 	$assert( ! preg_grep( '/count$/', $paths ), 'Unknown numeric attribute became an attachment.' );
-	foreach ( $rows as $row ) { $assert( 'read-only' === $row['replaceability'], 'Premature replaceability.' ); }
+	foreach ( $rows as $row ) { $assert( ( 'featured_image' === $row['data_path'] ? 'replaceable' : 'read-only' ) === $row['replaceability'], 'Incorrect writer eligibility.' ); }
 	update_option( 'site_icon', $image );
 	set_theme_mod( 'custom_logo', $image );
 	update_option( 'widget_media_image', array( 2 => array( 'attachment_id' => $image, 'url' => $url, 'width' => $image ), '_multiwidget' => 1 ) );

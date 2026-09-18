@@ -66,8 +66,8 @@ return static function ( array $status, array $filters, $page_number, $attachmen
 			<li><?php esc_html_e( 'Site identity: icon, current theme logo, header/background images, and stored core image widgets.', 'media-dependency-map' ); ?></li>
 			<li><?php echo \Bilal\MediaDependencyMap\Adapters\Elementor::available() ? esc_html__( 'Elementor: registered media, gallery, SVG icon, URL and nested repeater controls in saved documents. Dynamic values remain unresolved; rendered output and template inclusion are not evaluated.', 'media-dependency-map' ) : esc_html__( 'Elementor: unavailable or outside the supported API range (3.20 through 4.x). Its storage is not scanned.', 'media-dependency-map' ); ?></li>
 			<li><?php echo \Bilal\MediaDependencyMap\Adapters\Acf::available() ? esc_html__( 'ACF: saved image/file fields and schema-backed nested media in posts, terms, users, comments and default options. Pro field traversal requires its field APIs; custom options stores and orphaned metadata are excluded.', 'media-dependency-map' ) : esc_html__( 'ACF: unavailable or outside the supported 6.x API range. Its storage is not scanned.', 'media-dependency-map' ); ?></li>
-			<li><?php esc_html_e( 'WooCommerce, Bricks and WPBakery-specific storage: not scanned in this preview.', 'media-dependency-map' ); ?></li>
-			<li><?php esc_html_e( 'All references are read-only. No known references does not guarantee that a file is unused.', 'media-dependency-map' ); ?></li>
+			<li><?php esc_html_e( 'WooCommerce 8 through 11: product/variation images, galleries, local downloads and category thumbnails. Bricks and WPBakery-specific storage is not scanned.', 'media-dependency-map' ); ?></li>
+			<li><?php esc_html_e( 'Core featured images can be replaced from Media / Media replacement. Other paths are read-only. No known references does not guarantee that a file is unused.', 'media-dependency-map' ); ?></li>
 		</ul>
 	</details>
 	<hr>
@@ -97,6 +97,7 @@ return static function ( array $status, array $filters, $page_number, $attachmen
 				'core'          => __( 'Core posts', 'media-dependency-map' ),
 				'site-identity' => __( 'Site identity', 'media-dependency-map' ),
 				'elementor'     => __( 'Elementor', 'media-dependency-map' ),
+				'woocommerce'   => __( 'WooCommerce', 'media-dependency-map' ),
 				'acf'           => __( 'ACF', 'media-dependency-map' ),
 			) as $value => $label ) :
 				?>

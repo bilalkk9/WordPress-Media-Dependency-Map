@@ -3,7 +3,8 @@ Contributors: mbilalkk
 Tags: media, attachments
 Requires at least: 6.6
 Requires PHP: 7.4
-Stable tag: 0.5.0
+Stable tag: 0.6.0
+Tested up to: 7.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +16,9 @@ This development preview installs reference storage and a permission-protected s
 Resumable scans index supported core references, with incremental updates, searchable attachment details and CSV exports.
 Registered Elementor media controls are scanned when its supported API is available.
 ACF 6.x saved media fields are indexed across posts, terms, users, comments and default options.
-WooCommerce, replacement and rollback are not yet available.
+WooCommerce product/variation images, galleries, local download URLs and category thumbnails are indexed.
+Core featured images on non-product posts support dry-run replacement and conflict-aware rollback.
+Other reference types are read-only. Media > Dependency settings controls deletion protection and journal retention.
 No site content is sent to an external service. No telemetry is included.
 
 == Installation ==
@@ -42,6 +45,11 @@ or `wp mdm scan --resume --user=admin` to continue saved work. Inspect and ident
 Deactivation stops scheduled work and keeps data. Uninstall keeps data by default.
 
 == Changelog ==
+
+= 0.6.0 =
+* Added WooCommerce media scanning.
+* Added journaled featured-image replacement, rollback and conflict detection.
+* Added opt-in deletion protection, journal retention and privacy information.
 
 = 0.5.0 =
 * Added field-aware ACF image/file and nested schema traversal.

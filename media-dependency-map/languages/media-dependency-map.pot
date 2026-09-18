@@ -1,0 +1,614 @@
+# Copyright (C) 2026 Bilal
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Media Dependency Map 0.6.0\n"
+"Report-Msgid-Bugs-To: https://github.com/bilalkk9/WordPress-Media-Dependency-Map/issues\n"
+"Last-Translator: Bilal <bilalkk63@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-18T10:45:12+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: media-dependency-map\n"
+
+#. Plugin Name of the plugin
+#: media-dependency-map.php
+#: includes/admin/class-controller.php:107
+#: includes/class-plugin.php:118
+#: includes/views/browser.php:22
+#: includes/views/dependency-map.php:11
+msgid "Media Dependency Map"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: media-dependency-map.php
+msgid "https://github.com/bilalkk9/WordPress-Media-Dependency-Map"
+msgstr ""
+
+#. Description of the plugin
+#: media-dependency-map.php
+msgid "Inspect known Media Library dependencies and scan coverage. Development preview."
+msgstr ""
+
+#. Author of the plugin
+#: media-dependency-map.php
+msgid "Bilal"
+msgstr ""
+
+#. Author URI of the plugin
+#: media-dependency-map.php
+msgid "https://profiles.wordpress.org/mbilalkk/"
+msgstr ""
+
+#: includes/admin/class-controller.php:88
+msgid "You cannot view media dependencies."
+msgstr ""
+
+#: includes/admin/class-controller.php:90
+msgid "The dependency index schema is not ready. Reactivate the plugin or check database permissions."
+msgstr ""
+
+#: includes/admin/class-controller.php:98
+msgid "Attachment is unavailable."
+msgstr ""
+
+#: includes/admin/class-controller.php:107
+msgid "The index could not be read. Check the scan status or database permissions."
+msgstr ""
+
+#: includes/admin/class-controller.php:116
+#: includes/admin/class-controller.php:139
+msgid "Scan request was not authorized."
+msgstr ""
+
+#: includes/admin/class-controller.php:124
+msgid "Confirm the index rebuild first."
+msgstr ""
+
+#: includes/admin/class-controller.php:144
+msgid "Scan status is unavailable."
+msgstr ""
+
+#: includes/admin/class-controller.php:150
+msgid "You cannot export dependencies."
+msgstr ""
+
+#: includes/admin/class-controller.php:154
+msgid "Narrow the filters to 10,000 attachments or fewer before exporting."
+msgstr ""
+
+#. translators: %s: number of stored reference occurrences.
+#: includes/admin/class-controller.php:215
+#, php-format
+msgid "%s known reference"
+msgid_plural "%s known references"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-controller.php:217
+msgid "No known references"
+msgstr ""
+
+#: includes/admin/class-controller.php:217
+#: includes/admin/class-controller.php:255
+msgid "Not fully scanned"
+msgstr ""
+
+#: includes/admin/class-controller.php:228
+#: includes/views/browser.php:155
+msgid "Usage"
+msgstr ""
+
+#: includes/admin/class-controller.php:252
+msgid "View references"
+msgstr ""
+
+#: includes/admin/class-controller.php:261
+msgid "Media dependencies"
+msgstr ""
+
+#: includes/admin/class-controller.php:274
+msgid "Inspect dependencies and coverage"
+msgstr ""
+
+#: includes/admin/class-controller.php:276
+msgid "Index unavailable."
+msgstr ""
+
+#: includes/admin/class-controller.php:294
+msgid "Automatic progress paused. Use Resume scan to continue."
+msgstr ""
+
+#: includes/admin/class-controller.php:295
+msgid "Processing scan batchesÃ¢â‚¬Â¦"
+msgstr ""
+
+#: includes/admin/class-protection.php:53
+msgid "This attachment has confirmed references in the last published dependency index. Review its dependencies and refresh the scan before deleting it."
+msgstr ""
+
+#: includes/admin/class-protection.php:57
+#: includes/admin/class-protection.php:80
+msgid "Dependency settings"
+msgstr ""
+
+#: includes/admin/class-protection.php:62
+#: includes/admin/class-protection.php:78
+#: includes/admin/class-replacement.php:55
+msgid "Not authorized."
+msgstr ""
+
+#: includes/admin/class-protection.php:82
+msgid "Prevent permanent deletion of attachments with confirmed indexed references."
+msgstr ""
+
+#: includes/admin/class-protection.php:82
+msgid "Default: warn only. Blocking uses the last published index; rescan after removing usage. Unsupported sources may be missing, so an empty index is not proof that deletion is safe."
+msgstr ""
+
+#: includes/admin/class-protection.php:82
+msgid "Keep operation journals for days (1-365)"
+msgstr ""
+
+#: includes/admin/class-protection.php:82
+msgid "Expired journals are removed by the scan watchdog. Rollback becomes unavailable after removal. Journals store IDs, paths, hashes and statuses; no copied page content or personal field values."
+msgstr ""
+
+#: includes/admin/class-protection.php:82
+msgid "Remove plugin tables and settings on uninstall. This permanently removes rollback history."
+msgstr ""
+
+#: includes/admin/class-protection.php:89
+msgid "Media Dependency Map stores local indexes of attachment and consumer IDs, field paths, fingerprints and scan timestamps. User and comment field references can identify their associated WordPress records. Replacement journals record the administrator ID and changed attachment IDs. No telemetry or external service is used. Administrators control retention and uninstall cleanup."
+msgstr ""
+
+#: includes/admin/class-replacement.php:20
+#: includes/admin/class-replacement.php:58
+msgid "Media replacement"
+msgstr ""
+
+#: includes/admin/class-replacement.php:35
+msgid "Confirm the action first."
+msgstr ""
+
+#: includes/admin/class-replacement.php:47
+msgid "Cannot proceed. Check permissions and image IDs, finish the scan, or create a fresh preview. A worker may be busy. Existing reports remain available."
+msgstr ""
+
+#: includes/admin/class-replacement.php:58
+msgid "Preview before applying. Only core featured images on non-product posts are writable. Other references remain read-only. Files are never deleted. Each request processes ten changes; repeat until no eligible items remain. Previews expire after 30 minutes."
+msgstr ""
+
+#: includes/admin/class-replacement.php:61
+msgid "Source attachment ID"
+msgstr ""
+
+#: includes/admin/class-replacement.php:61
+msgid "Target image ID"
+msgstr ""
+
+#: includes/admin/class-replacement.php:61
+msgid "Create dry run"
+msgstr ""
+
+#: includes/admin/class-replacement.php:65
+msgid "Operation report"
+msgstr ""
+
+#: includes/admin/class-replacement.php:66
+msgid "Consumer / path"
+msgstr ""
+
+#: includes/admin/class-replacement.php:66
+msgid "Status"
+msgstr ""
+
+#: includes/admin/class-replacement.php:69
+msgid "Conflicts leave that item unchanged. Rollback restores only values still matching this operation. Rescan to refresh the index after changes."
+msgstr ""
+
+#: includes/admin/class-replacement.php:71
+msgid "I confirm the changes shown in this report."
+msgstr ""
+
+#: includes/admin/class-replacement.php:71
+msgid "Apply next batch"
+msgstr ""
+
+#: includes/admin/class-replacement.php:71
+msgid "Roll back next batch"
+msgstr ""
+
+#: includes/admin/class-replacement.php:73
+msgid "Operation unavailable."
+msgstr ""
+
+#: includes/admin/class-replacement.php:77
+msgid "Recent operations"
+msgstr ""
+
+#: includes/class-lifecycle.php:30
+msgid "Activate Media Dependency Map separately on each site."
+msgstr ""
+
+#: includes/class-plugin.php:92
+msgid "Media Dependency Map: every minute"
+msgstr ""
+
+#: includes/class-plugin.php:112
+msgid "Media Dependency Map could not initialize its database tables. Check database permissions and InnoDB support."
+msgstr ""
+
+#: includes/class-plugin.php:119
+msgid "Dependency Map"
+msgstr ""
+
+#: includes/views/browser.php:23
+msgid "Review known media references and scan coverage before changing an attachment."
+msgstr ""
+
+#: includes/views/browser.php:24
+msgid "Scan status"
+msgstr ""
+
+#. translators: %s: completed consumer count.
+#: includes/views/browser.php:29
+#, php-format
+msgid "Scan running. %s consumers processed."
+msgstr ""
+
+#: includes/views/browser.php:31
+msgid "Supported-source scan complete. Coverage limitations still apply."
+msgstr ""
+
+#: includes/views/browser.php:33
+msgid "Not fully scanned. Results may be missing or out of date."
+msgstr ""
+
+#. translators: %s: number of pending or failed consumer changes.
+#: includes/views/browser.php:38
+#, php-format
+msgid "%s changes are pending or require a successful rescan."
+msgstr ""
+
+#: includes/views/browser.php:41
+msgid "The last scan had failures. The previous successful index was preserved. Start a new full scan after correcting the affected consumers."
+msgstr ""
+
+#: includes/views/browser.php:42
+msgid "Scan error sample"
+msgstr ""
+
+#: includes/views/browser.php:49
+msgid "A worker was interrupted. Resume the scan; persistent errors may indicate a database or resource limit."
+msgstr ""
+
+#: includes/views/browser.php:55
+msgid "Start full scan"
+msgstr ""
+
+#: includes/views/browser.php:56
+msgid "Resume scan"
+msgstr ""
+
+#: includes/views/browser.php:57
+#: includes/views/browser.php:59
+msgid "Rebuild index"
+msgstr ""
+
+#: includes/views/browser.php:58
+msgid "Build a fresh dependency index. The last successful index remains visible until the new scan succeeds."
+msgstr ""
+
+#: includes/views/browser.php:62
+msgid "Scanning continues through WordPress Cron while the site receives traffic. With Cron disabled, use Resume scan or WP-CLI."
+msgstr ""
+
+#: includes/views/browser.php:63
+msgid "Coverage and limitations"
+msgstr ""
+
+#: includes/views/browser.php:65
+msgid "Core posts: featured images, recognized Gutenberg media attributes, synced patterns, HTML media URLs, and supported media shortcodes."
+msgstr ""
+
+#: includes/views/browser.php:66
+msgid "Site identity: icon, current theme logo, header/background images, and stored core image widgets."
+msgstr ""
+
+#: includes/views/browser.php:67
+msgid "Elementor: registered media, gallery, SVG icon, URL and nested repeater controls in saved documents. Dynamic values remain unresolved; rendered output and template inclusion are not evaluated."
+msgstr ""
+
+#: includes/views/browser.php:67
+msgid "Elementor: unavailable or outside the supported API range (3.20 through 4.x). Its storage is not scanned."
+msgstr ""
+
+#: includes/views/browser.php:68
+msgid "ACF: saved image/file fields and schema-backed nested media in posts, terms, users, comments and default options. Pro field traversal requires its field APIs; custom options stores and orphaned metadata are excluded."
+msgstr ""
+
+#: includes/views/browser.php:68
+msgid "ACF: unavailable or outside the supported 6.x API range. Its storage is not scanned."
+msgstr ""
+
+#: includes/views/browser.php:69
+msgid "WooCommerce 8 through 11: product/variation images, galleries, local downloads and category thumbnails. Bricks and WPBakery-specific storage is not scanned."
+msgstr ""
+
+#: includes/views/browser.php:70
+msgid "Core featured images can be replaced from Media / Media replacement. Other paths are read-only. No known references does not guarantee that a file is unused."
+msgstr ""
+
+#: includes/views/browser.php:74
+msgid "Browse attachments"
+msgstr ""
+
+#: includes/views/browser.php:74
+#: includes/views/browser.php:76
+msgid "Unresolved references"
+msgstr ""
+
+#: includes/views/browser.php:77
+msgid "Counts represent stored occurrences, not distinct pages. A block and its HTML may contain separate references to the same file."
+msgstr ""
+
+#: includes/views/browser.php:80
+#: includes/views/browser.php:108
+msgid "Confidence"
+msgstr ""
+
+#: includes/views/browser.php:84
+msgid "All confidence levels"
+msgstr ""
+
+#: includes/views/browser.php:85
+msgid "Exact ID"
+msgstr ""
+
+#: includes/views/browser.php:86
+msgid "Strong URL match"
+msgstr ""
+
+#: includes/views/browser.php:87
+msgid "Unresolved"
+msgstr ""
+
+#: includes/views/browser.php:92
+msgid "Source"
+msgstr ""
+
+#: includes/views/browser.php:96
+msgid "All sources"
+msgstr ""
+
+#: includes/views/browser.php:97
+msgid "Core posts"
+msgstr ""
+
+#: includes/views/browser.php:98
+msgid "Site identity"
+msgstr ""
+
+#: includes/views/browser.php:99
+msgid "Elementor"
+msgstr ""
+
+#: includes/views/browser.php:100
+msgid "WooCommerce"
+msgstr ""
+
+#: includes/views/browser.php:101
+msgid "ACF"
+msgstr ""
+
+#: includes/views/browser.php:105
+msgid "Filter"
+msgstr ""
+
+#: includes/views/browser.php:107
+msgid "Known dependency occurrences"
+msgstr ""
+
+#: includes/views/browser.php:108
+msgid "Consumer"
+msgstr ""
+
+#: includes/views/browser.php:108
+msgid "Source and location"
+msgstr ""
+
+#: includes/views/browser.php:108
+msgid "Last seen"
+msgstr ""
+
+#: includes/views/browser.php:115
+msgid "Edit consumer"
+msgstr ""
+
+#. translators: %s: comment identifier.
+#: includes/views/browser.php:133
+#, php-format
+msgid "Comment #%s"
+msgstr ""
+
+#: includes/views/browser.php:137
+msgid "Site settings"
+msgstr ""
+
+#: includes/views/browser.php:141
+msgid "Unavailable consumer"
+msgstr ""
+
+#: includes/views/browser.php:143
+msgid "Read-only"
+msgstr ""
+
+#: includes/views/browser.php:149
+msgid "No matching references in the published dependency index."
+msgstr ""
+
+#: includes/views/browser.php:152
+msgid "Media Library dependencies"
+msgstr ""
+
+#: includes/views/browser.php:154
+msgid "Search title, filename, ID, MIME type, consumer title or URL"
+msgstr ""
+
+#: includes/views/browser.php:158
+msgid "All media"
+msgstr ""
+
+#: includes/views/browser.php:159
+msgid "Has known references"
+msgstr ""
+
+#: includes/views/browser.php:160
+msgid "No indexed references"
+msgstr ""
+
+#: includes/views/browser.php:164
+msgid "Media type"
+msgstr ""
+
+#: includes/views/browser.php:167
+msgid "All types"
+msgstr ""
+
+#: includes/views/browser.php:168
+msgid "Images"
+msgstr ""
+
+#: includes/views/browser.php:169
+msgid "Audio"
+msgstr ""
+
+#: includes/views/browser.php:170
+msgid "Video"
+msgstr ""
+
+#: includes/views/browser.php:171
+msgid "Documents"
+msgstr ""
+
+#: includes/views/browser.php:175
+msgid "Uploaded from"
+msgstr ""
+
+#: includes/views/browser.php:175
+msgid "Uploaded through"
+msgstr ""
+
+#: includes/views/browser.php:176
+msgid "Sort by"
+msgstr ""
+
+#: includes/views/browser.php:179
+msgid "Upload date"
+msgstr ""
+
+#: includes/views/browser.php:180
+msgid "Title"
+msgstr ""
+
+#: includes/views/browser.php:181
+msgid "Usage count"
+msgstr ""
+
+#: includes/views/browser.php:182
+msgid "Last reference scan"
+msgstr ""
+
+#: includes/views/browser.php:186
+msgid "Order"
+msgstr ""
+
+#: includes/views/browser.php:186
+msgid "Descending"
+msgstr ""
+
+#: includes/views/browser.php:186
+msgid "Ascending"
+msgstr ""
+
+#: includes/views/browser.php:187
+msgid "Apply filters"
+msgstr ""
+
+#: includes/views/browser.php:188
+msgid "Export filtered CSV"
+msgstr ""
+
+#: includes/views/browser.php:189
+msgid "Attachments and known references"
+msgstr ""
+
+#: includes/views/browser.php:189
+msgid "Attachment"
+msgstr ""
+
+#: includes/views/browser.php:189
+msgid "Type"
+msgstr ""
+
+#: includes/views/browser.php:189
+msgid "Known usage"
+msgstr ""
+
+#: includes/views/browser.php:189
+msgid "Uploaded"
+msgstr ""
+
+#: includes/views/browser.php:198
+msgid "No attachments match these filters."
+msgstr ""
+
+#: includes/views/browser.php:200
+msgid "Dependency results pagination"
+msgstr ""
+
+#: includes/views/browser.php:204
+msgid "Previous page"
+msgstr ""
+
+#. translators: %s: current results page.
+#: includes/views/browser.php:205
+#, php-format
+msgid "Page %s"
+msgstr ""
+
+#: includes/views/browser.php:209
+msgid "Next page"
+msgstr ""
+
+#: includes/views/dependency-map.php:12
+msgid "Development preview â€” reference storage and core inspection are available."
+msgstr ""
+
+#: includes/views/dependency-map.php:13
+msgid "Scan coverage"
+msgstr ""
+
+#: includes/views/dependency-map.php:14
+msgid "Not fully scanned. Whole-site scanning and the dependency browser are under development."
+msgstr ""
+
+#: includes/views/dependency-map.php:15
+msgid "Core inspection covers featured images, recognized Gutenberg media attributes, HTML media URLs, explicit gallery and playlist IDs, and site identity settings."
+msgstr ""
+
+#: includes/views/dependency-map.php:16
+msgid "Inspection is currently available through WP-CLI. It reads one consumer at a time and does not populate the index."
+msgstr ""
+
+#: includes/views/dependency-map.php:17
+msgid "Elementor, ACF, WooCommerce, Bricks and WPBakery-specific storage is not covered in this preview."
+msgstr ""
+
+#: includes/views/dependency-map.php:18
+msgid "This preview does not replace references or prevent media deletion."
+msgstr ""
